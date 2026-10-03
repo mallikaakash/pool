@@ -1,0 +1,41 @@
+{
+  "name": "pool-trade-credit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "compile": "node scripts/compile.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
+    "build": "tsc -b && vite build",
+    "check": "npm test && npm run build",
+    "test:browser": "node scripts/verify-browser.mjs",
+    "pretest": "npm run compile",
+    "format": "prettier --write src scripts tests docs *.json *.ts *.html README.md"
+  },
+  "dependencies": {
+    "lucide-react": "^1.51.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "viem": "^2.57.2"
+  },
+  "devDependencies": {
+    "@morpho-org/morpho-blue": "1.0.0",
+    "@openzeppelin/contracts": "4.9.6",
+    "@pendle/core-v2": "6.11.0",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "agent-browser": "^0.38.2",
+    "prettier": "^3.9.9",
+    "solc": "0.8.28",
+    "solc-morpho": "npm:solc@^0.8.19",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}

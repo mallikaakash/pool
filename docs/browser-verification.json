@@ -1,0 +1,20 @@
+{
+  "verifiedAt": "2026-10-03T14:00:13.189Z",
+  "passed": [
+    "desktop rendering",
+    "deposit",
+    "Pendle mint",
+    "refresh persistence",
+    "interest accrual",
+    "claim and unwrap",
+    "independent YT transfer",
+    "collections and repayment sweep",
+    "impairment and funded liquidation",
+    "PT maturity redemption",
+    "evidence disclosure",
+    "transaction activity",
+    "modal escape",
+    "mobile navigation and width"
+  ],
+  "browserErrors": []
+}
