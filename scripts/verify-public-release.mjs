@@ -108,11 +108,13 @@ try {
     .getByRole("button", { name: "Watch the film", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toBeVisible();
-  assert(
-    await page
-      .locator("dialog video")
-      .evaluate((v) => v.currentSrc.includes("pool-story.mp4")),
-  );
+  await expect
+    .poll(() =>
+      page
+        .locator("dialog video")
+        .evaluate((v) => v.currentSrc.includes("pool-story.mp4")),
+    )
+    .toBe(true);
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).not.toBeVisible();
   checks.push(
