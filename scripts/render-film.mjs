@@ -11,13 +11,13 @@ assert(["hero", "story"].includes(mode), "Mode must be hero or story");
 const width = Number(process.env.FILM_WIDTH ?? 1280),
   height = (width * 9) / 16;
 const fps = 24,
-  seconds = mode === "hero" ? 18 : 120;
+  seconds = mode === "hero" ? 20 : 68;
 assert(
   Number.isInteger(height) && width % 2 === 0 && height % 2 === 0,
   "Use even 16:9 dimensions",
 );
 const url = process.env.FILM_URL ?? "http://127.0.0.1:4176/film/";
-const session = "pool-film-render";
+const session = `pool-film-render-${mode}`;
 const cli = async (...args) =>
   (
     await exec("./node_modules/.bin/agent-browser", [
@@ -70,6 +70,8 @@ try {
       String(fps),
       "-i",
       path.join(dir, "%05d.png"),
+      "-frames:v",
+      String(frames),
       "-c:v",
       "libx264",
       "-preset",

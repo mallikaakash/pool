@@ -2,480 +2,404 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#edece5" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#15291f" />
     <meta
       name="description"
-      content="An illustrated walkthrough of Pool: attested receivables, lending capital, and separable principal and yield."
+      content="Pool — receivables-backed credit, with principal and yield you can separate."
     />
-    <title>Pool — The life of a lending position</title>
+    <title>Pool — Credit, made composable.</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="film.css" />
   </head>
   <body>
     <main class="studio">
       <header class="toolbar">
-        <a
-          class="wordmark"
-          href="https://pool-omega-five.vercel.app"
-          aria-label="Open Pool"
+        <a class="brand" href="https://pool-omega-five.vercel.app"
           >pool<span>.</span></a
-        >
-        <div class="film-name">THE LIFE OF A LENDING POSITION</div>
-        <a
-          class="live-link"
+        ><span>THE LAUNCH FILM</span
+        ><a
+          class="app-link"
           href="https://pool-omega-five.vercel.app/#evidence"
           target="_blank"
           rel="noreferrer"
-          >Explore the live demo <span>↗</span></a
+          >Explore the product ↗</a
         >
       </header>
       <div class="stage-wrap">
-        <div
-          id="stage"
-          class="stage"
-          role="img"
-          aria-label="Animated explanation of the Pool lending lifecycle"
-        >
-          <div class="stage-grid"></div>
+        <div id="stage" class="stage" role="img" aria-label="Pool launch film">
+          <div class="grain"></div>
           <header class="film-header">
-            <span class="wordmark">pool<span>.</span></span
-            ><span class="film-category">TRADE CREDIT, COMPOSED.</span
+            <b class="brand">pool<span>.</span></b
+            ><span id="chapter-label">CREDIT, MADE COMPOSABLE.</span
             ><span class="network"><i></i> ARBITRUM SEPOLIA</span>
           </header>
-
-          <section class="scene" data-scene="0" aria-label="The financing gap">
-            <div class="copy">
-              <div class="eyebrow" data-in="0">01 / THE FINANCING GAP</div>
-              <h1 data-in="1">
-                Work delivered.<br />Capital <em>waiting.</em>
-              </h1>
-              <p data-in="2">
-                A supplier has completed the work.<br />The invoice still has
-                weeks to run.
-              </p>
-              <div class="statement" data-in="3">
-                <span class="tiny">THE OPPORTUNITY</span
-                ><strong
-                  >Finance the time<br />between delivery and payment.</strong
-                >
-              </div>
-            </div>
-            <div class="visual invoice-visual">
-              <div class="orbit orbit-one"></div>
-              <div class="orbit orbit-two"></div>
-              <div class="invoice rear" data-in="2">
-                <span>INVOICE / SG-003</span><b>90,000</b
-                ><small>tUSD · synthetic record</small>
-              </div>
-              <div class="invoice front" data-in="1">
-                <div class="invoice-top">
-                  <span>RECEIVABLE / SG-001</span
-                  ><span class="mini-logo">p.</span>
-                </div>
-                <div class="invoice-rule"></div>
-                <span class="tiny">AMOUNT DUE</span
-                ><b>120,000<span>tUSD</span></b>
-                <div class="invoice-line">
-                  <span>Delivery</span><strong>Completed</strong>
-                </div>
-                <div class="invoice-line">
-                  <span>Payment</span><strong>Due in 30 days</strong>
-                </div>
-                <div class="invoice-seal">SYNTHETIC DEMO RECORD</div>
-              </div>
-              <div class="float-note" data-in="3">
-                <i></i> Value exists. Cash arrives later.
-              </div>
-            </div>
-            <div class="scene-note">
-              Illustrative financing problem · no real invoices or customer
-              relationship implied
-            </div>
-          </section>
-
-          <section
-            class="scene"
-            data-scene="1"
-            aria-label="Attestation and admission"
-          >
-            <div class="copy">
+          <section class="scene hook dark" data-scene="0">
+            <div class="hook-copy">
               <div class="eyebrow" data-in="0">
-                02 / MAKE THE CLAIM INSPECTABLE
+                WORK DELIVERED. PAYMENT IN 30 DAYS.
               </div>
-              <h1 data-in="1">
-                One portfolio.<br />A specific<br /><em>signed claim.</em>
+              <h1 data-in="0">
+                Invoices wait.<br /><em>Capital shouldn't.</em>
               </h1>
-              <p data-in="2">
-                An attestor commits to the documents,<br />values, currency, and
-                validity period.
-              </p>
-              <div class="tag-row" data-in="3">
-                <span>Evidence hashes</span><span>Named signer</span
-                ><span>Onchain admission</span>
+              <p data-in="1">Put receivables to work before payment arrives.</p>
+            </div>
+            <div class="hook-art">
+              <div class="invoice-stack back"></div>
+              <div class="invoice-stack mid"></div>
+              <div class="hero-invoice" data-in="0">
+                <span class="tiny">ACCEPTED INVOICE</span
+                ><b>120,000<small>tUSD</small></b>
+                <div class="invoice-lines"><i></i><i></i><i></i></div>
+                <div class="waiting">
+                  <span>PAYMENT DUE</span><strong id="days">30 days</strong>
+                </div>
+              </div>
+              <div class="hook-cash" data-in="2">
+                <span>WORKING CAPITAL</span><b>Available through borrowing ↗</b>
               </div>
             </div>
-            <div class="visual">
-              <div class="verification-card" data-in="1">
-                <div class="card-heading">
-                  <span class="tiny">PORTFOLIO / SG-001</span
-                  ><span class="status">● ATTESTED</span>
-                </div>
-                <div class="portfolio-number">5 <span>receivables</span></div>
-                <div class="value-grid">
-                  <div>
-                    <small>Face value</small><b>500,000 <i>tUSD</i></b>
-                  </div>
-                  <div>
-                    <small>Book value</small><b>485,000 <i>tUSD</i></b>
-                  </div>
-                </div>
-                <div class="hash-lines">
-                  <span>01</span>
-                  <div></div>
-                  <b>✓</b><span>02</span>
-                  <div></div>
-                  <b>✓</b><span>03</span>
-                  <div></div>
-                  <b>✓</b><span>04</span>
-                  <div></div>
-                  <b>✓</b><span>05</span>
-                  <div></div>
-                  <b>✓</b>
-                </div>
-                <div class="signature">
-                  <div class="check-round">✓</div>
-                  <div>
-                    <strong>Authorized attestor</strong
-                    ><small>0x45b1…8790</small>
-                  </div>
-                  <span>EIP-712</span>
-                </div>
-              </div>
-              <div class="under-card" data-in="3">
-                Signed → Published → Admitted
-              </div>
-            </div>
-            <div class="scene-note">
-              Published on Arbitrum Sepolia · a signature identifies a claim; it
-              does not prove offchain truth
+            <div class="bottom-line">
+              Illustrative financing scenario · synthetic receivables
             </div>
           </section>
-
-          <section class="scene" data-scene="2" aria-label="Investor lending">
-            <div class="copy">
-              <div class="eyebrow" data-in="0">03 / FUND THE FACILITY</div>
-              <h1 data-in="1">
-                Cash in.<br /><em>Lending shares</em><br />out.
-              </h1>
-              <p data-in="2">
-                Investors supply test dollars.<br />The vault lends through
-                Morpho.
-              </p>
-              <div class="equation" data-in="3">
-                <b>25,000</b><span>tUSD → approximately</span><b>25,000</b
-                ><span>pCREDIT shares at the initial share price</span>
-              </div>
+          <section class="scene reveal dark" data-scene="1">
+            <div class="intro-line" data-in="0">INTRODUCING</div>
+            <div class="giant-brand" data-in="0">pool<span>.</span></div>
+            <h1 data-in="1">
+              Receivables-backed credit.<br /><em>Yield you can separate.</em>
+            </h1>
+            <div class="intro-tags" data-in="2">
+              <span>Attested receivables</span><i>→</i
+              ><span>Morpho lending</span><i>→</i><span>Pendle PT / YT</span>
             </div>
-            <div class="visual flow-visual">
-              <div class="flow-node investor-node" data-in="1">
-                <span class="node-icon">↗</span
-                ><span class="tiny">INVESTOR</span><b>tUSD</b>
-              </div>
-              <div class="flow-rail rail-a"><span class="flow-dot"></span></div>
-              <div class="flow-node vault-node" data-in="2">
-                <span class="tiny">LENDER VAULT</span><b>pCREDIT</b
-                ><small>Your share of the lending position</small>
-              </div>
-              <div class="flow-rail rail-b"><span class="flow-dot"></span></div>
-              <div class="protocol-node" data-in="3">
-                <span class="morpho-mark">◇</span>
-                <div>
-                  <b>Morpho Blue</b
-                  ><small>Pool-operated testnet instance</small>
-                </div>
-              </div>
-              <div class="ownership-note" data-in="4">
-                A lending claim.<br /><strong
-                  >Not ownership of an individual invoice.</strong
-                >
-              </div>
-            </div>
-            <div class="scene-note">
-              Illustrative next step · investor deposit was not yet executed at
-              the recorded release snapshot
+            <div class="bottom-line">
+              A composition of existing lending and yield primitives on Arbitrum
             </div>
           </section>
-
-          <section
-            class="scene"
-            data-scene="3"
-            aria-label="Collateralized borrowing"
-          >
-            <div class="copy">
-              <div class="eyebrow" data-in="0">04 / PUT CAPITAL TO WORK</div>
-              <h1 data-in="1">
-                Receivables back<br /><em>working capital.</em>
-              </h1>
-              <p data-in="2">
-                The operator draws against the portfolio.<br />Borrower interest
-                funds lender yield.
-              </p>
-              <div class="small-callout" data-in="3">
-                Collateral eligibility and borrowing limits<br />are enforced by
-                contracts.
-              </div>
+          <section class="scene overview" data-scene="2">
+            <div class="top-copy">
+              <div class="eyebrow" data-in="0">THE WHOLE IDEA, IN ONE FLOW</div>
+              <h1 data-in="0">Businesses borrow. <em>Investors earn.</em></h1>
             </div>
-            <div class="visual">
-              <div class="borrow-card" data-in="1">
-                <span class="tiny">ILLUSTRATIVE BORROWING POSITION</span>
-                <div class="borrow-value">250,000 <span>tUSD</span></div>
-                <div class="meter">
-                  <div></div>
-                  <span class="limit-marker"></span>
-                </div>
-                <div class="meter-labels">
-                  <span>51.55% loan-to-value</span><b>62.50% limit</b>
-                </div>
-                <div class="borrow-detail">
-                  <span>Collateral book value</span><b>485,000 tUSD</b>
-                </div>
-                <div class="borrow-detail">
-                  <span>Initial borrowing ceiling</span><b>303,125 tUSD</b>
-                </div>
-                <div class="interest-line">
-                  <span>Business</span><b>Interest →</b><span>Lenders</span>
-                </div>
-              </div>
-              <p class="visual-footnote" data-in="3">
-                The demo uses a fixed 12% borrowing APR.<br />Lender yield
-                depends on utilization and credit performance.
-              </p>
-            </div>
-            <div class="scene-note">
-              Illustrative draw · book valuation is not a guaranteed liquidation
-              price
-            </div>
-          </section>
-
-          <section
-            class="scene"
-            data-scene="4"
-            aria-label="Principal and yield separation"
-          >
-            <div class="copy">
-              <div class="eyebrow" data-in="0">05 / CHOOSE HOW TO HOLD IT</div>
-              <h1 data-in="1">One position.<br /><em>Two components.</em></h1>
-              <p data-in="2">
-                Pendle separates the lending position<br />into principal and
-                future yield.
-              </p>
-              <div class="small-callout" data-in="3">
-                Hold both, or trade a component<br />when a funded counterparty
-                is available.
-              </div>
-            </div>
-            <div class="visual split-visual">
-              <div class="parent-token" data-in="1">
-                <span class="tiny">LENDER SHARES → SY WRAPPER</span
-                ><b>pCREDIT</b>
-              </div>
-              <svg class="split-lines" viewBox="0 0 560 200" fill="none">
-                <path
-                  d="M280 0V55Q280 85 245 85H145Q115 85 115 120V195M280 55Q280 85 315 85H415Q445 85 445 120V195"
-                  stroke="#a6ae99"
-                  stroke-width="2"
-                />
+            <div class="map">
+              <svg class="map-lines" viewBox="0 0 1400 370">
+                <path id="capital-path" d="M300 185H550" />
+                <path id="borrow-path" d="M850 185H1100" />
+                <path id="interest-path" d="M1170 245V320H230V245" />
+                <path class="trace" data-path="capital-path" />
+                <path class="trace" data-path="borrow-path" />
+                <path class="trace" data-path="interest-path" />
+                <circle class="packet" data-follow="capital-path" r="8" />
+                <circle class="packet" data-follow="borrow-path" r="8" />
                 <circle
-                  class="split-particle"
-                  cx="280"
-                  cy="45"
-                  r="6"
-                  fill="#cf643f"
+                  class="packet green"
+                  data-follow="interest-path"
+                  r="8"
                 />
               </svg>
-              <div class="token-pair">
-                <div class="token-card pt" data-in="2">
-                  <span class="token-circle">PT</span>
-                  <h2>Principal</h2>
-                  <p>Principal-side claim<br />redeemable at maturity</p>
-                </div>
-                <div class="token-card yt" data-in="3">
-                  <span class="token-circle">YT</span>
-                  <h2>Future yield</h2>
-                  <p>Yield entitlement<br />before maturity</p>
-                </div>
+              <div class="map-card investor" data-in="0">
+                <span class="tiny">INVESTOR</span><b>Supply capital</b
+                ><small>Receive lender shares</small>
               </div>
-              <div class="pendle-label" data-in="4">
-                PENDLE CORE · POOL-OPERATED TESTNET INSTANCE
+              <div class="map-card facility" data-in="1">
+                <span class="tiny">POOL + MORPHO</span><b>Lending facility</b
+                ><small>Backed by attested receivables</small>
               </div>
+              <div class="map-card business" data-in="2">
+                <span class="tiny">BUSINESS</span><b>Borrow cash</b
+                ><small>Pay interest on the loan</small>
+              </div>
+              <span class="rail-label label-a">DEPOSIT</span
+              ><span class="rail-label label-b">BORROW</span
+              ><span class="rail-label label-c"
+                >BORROWER INTEREST → LENDER YIELD</span
+              >
             </div>
-            <div class="scene-note">
-              PT is not capital protected · both components depend on the
-              underlying lending position
+            <div class="caption" id="flow-caption">
+              Capital flows from investors to the business.
+            </div>
+            <div class="bottom-line">
+              Investors hold a lending claim, not individual invoices ·
+              illustrative flow
             </div>
           </section>
-
-          <section
-            class="scene"
-            data-scene="5"
-            aria-label="Funded secondary trade"
-          >
-            <div class="copy">
-              <div class="eyebrow" data-in="0">06 / MAKE THE TRADE REAL</div>
-              <h1 data-in="1">Sell the yield.<br /><em>Receive cash.</em></h1>
-              <p data-in="2">
-                A signed, funded quote exchanges<br />YT and test dollars in one
-                transaction.
+          <section class="scene split" data-scene="3">
+            <div class="split-copy">
+              <div class="eyebrow" data-in="0">
+                NOW, MAKE THE YIELD ITS OWN POSITION
+              </div>
+              <h1 data-in="0">
+                Keep principal.<br /><em>Trade future yield.</em>
+              </h1>
+              <p data-in="1">
+                Pendle turns a wrapped lending position<br />into two separately
+                transferable tokens.
               </p>
-              <div class="tag-row" data-in="3">
-                <span>Named buyer</span><span>Fixed amount</span
-                ><span>Expiry + nonce</span>
+              <div class="split-explain" id="split-explain">
+                Start with one lending position.
               </div>
             </div>
-            <div class="visual">
-              <div class="trade-ticket" data-in="1">
-                <div class="card-heading">
-                  <span class="tiny">ILLUSTRATIVE EXECUTABLE QUOTE</span
-                  ><span class="quote-corner">↗</span>
-                </div>
-                <div class="ticket-row">
-                  <div>
-                    <small>Investor sells</small><b>1,000 <span>YT</span></b>
-                  </div>
-                  <span class="exchange-icon">⇄</span>
-                  <div>
-                    <small>Buyer pays</small><b>5 <span>tUSD</span></b>
-                  </div>
-                </div>
-                <div class="ticket-divider"></div>
-                <div class="quote-check">
-                  <span>✓</span> Signature & deadline
-                </div>
-                <div class="quote-check">
-                  <span>✓</span> Buyer balance & allowance
-                </div>
-                <div class="quote-check">
-                  <span>✓</span> Tokens and payment settle together
-                </div>
-                <div class="ticket-footer">
-                  ATOMIC SETTLEMENT <span>→</span>
-                </div>
+            <div class="split-board">
+              <svg viewBox="0 0 680 520" class="split-svg">
+                <path
+                  id="pt-path"
+                  d="M340 130V205Q340 245 295 245H165Q125 245 125 290V307"
+                />
+                <path
+                  id="yt-path"
+                  d="M340 130V205Q340 245 385 245H515Q555 245 555 290V307"
+                />
+                <path class="trace" data-path="pt-path" />
+                <path class="trace orange" data-path="yt-path" />
+                <circle class="packet green" data-follow="pt-path" r="9" />
+                <circle class="packet" data-follow="yt-path" r="9" />
+              </svg>
+              <div class="split-parent">
+                <span class="tiny">pCREDIT → SY WRAPPER</span
+                ><b>Lending position</b>
               </div>
-              <p class="visual-footnote" data-in="3">
-                The operator funds the demo bid.<br />This price is chosen for
-                demonstration, not market discovery.
-              </p>
+              <div class="token pt">
+                <div class="coin">PT</div>
+                <b>Principal</b>
+                <p>Principal-side entitlement<br />redeemable at maturity</p>
+              </div>
+              <div class="token yt">
+                <div class="coin">YT</div>
+                <b>Future yield</b>
+                <p>Yield entitlement<br />before maturity</p>
+              </div>
+              <span class="split-credit">POWERED BY PENDLE CORE</span>
             </div>
-            <div class="scene-note">
-              Illustrative trade · no AMM, guaranteed exit, or independent
-              market demand is claimed
+            <div class="bottom-line">
+              PT is not capital protected · underlying credit losses can reduce
+              value · illustrative tokenization
             </div>
           </section>
-
-          <section
-            class="scene"
-            data-scene="6"
-            aria-label="Collection and repayment"
-          >
+          <section class="scene attest" data-scene="4">
             <div class="copy">
               <div class="eyebrow" data-in="0">
-                07 / CLOSE THE CASH-FLOW LOOP
+                01 / START WITH AN ACCOUNTABLE CLAIM
               </div>
-              <h1 data-in="1">Cash collected.<br /><em>Debt reduced.</em></h1>
-              <p data-in="2">
-                Record a payment against an invoice.<br />Sweep the collected
-                cash into repayment.
+              <h1 data-in="0">
+                Who signed?<br />What exactly<br /><em>did they attest?</em>
+              </h1>
+              <p data-in="1">
+                One signature binds the portfolio,<br />its values, and the
+                evidence hashes.
               </p>
-              <div class="small-callout" data-in="3">
-                The receivable's book value falls as cash arrives,<br />so the
-                same asset is not counted twice.
+              <div class="attest-progress">
+                <span>Review</span><i>→</i><span>Sign</span><i>→</i
+                ><span>Admit</span>
               </div>
             </div>
-            <div class="visual">
-              <div class="collection-card" data-in="1">
-                <span class="tiny">ILLUSTRATIVE COLLECTION / SG-001</span>
-                <div class="collection-value">+1,000 <span>tUSD</span></div>
-                <div class="account-row">
-                  <span>Receivable book value</span><b>↓</b>
-                </div>
-                <div class="account-row">
-                  <span>Pool cash on collection</span><b>↑</b>
-                </div>
-                <div class="account-row emphasized">
-                  <span>Loan debt after sweep</span><b>↓</b>
-                </div>
-                <div class="collection-footer">
-                  Collect <span>→</span> Reconcile <span>→</span> Repay
-                </div>
+            <div class="evidence-panel">
+              <header>
+                <span class="tiny">PORTFOLIO / SG-001</span
+                ><b id="attest-status">REVIEWING</b>
+              </header>
+              <div class="evidence-numbers">
+                <div><b>500k</b><span>tUSD face value</span></div>
+                <div><b>485k</b><span>tUSD book value</span></div>
               </div>
-              <p class="visual-footnote" data-in="3">
-                Losses can reduce lender value.<br />Withdrawals depend on
-                available lending liquidity.
-              </p>
+              <div class="document-rows">
+                <div><span>01</span><b>Marine services</b><i>✓</i></div>
+                <div><span>02</span><b>Logistics</b><i>✓</i></div>
+                <div><span>03</span><b>Food & beverage</b><i>✓</i></div>
+                <div><span>04</span><b>Manufacturing</b><i>✓</i></div>
+                <div><span>05</span><b>Packaging</b><i>✓</i></div>
+              </div>
+              <footer>
+                <span class="seal">✓</span>
+                <div>
+                  <b>Designated attestor</b><span>0x45b1…8790 · EIP-712</span>
+                </div>
+                <strong>ONCHAIN</strong>
+              </footer>
             </div>
-            <div class="scene-note">
-              Implemented and locally rehearsed · public collection and
-              repayment remain to be demonstrated
+            <div class="bottom-line">
+              Actual admitted demo portfolio · signatures identify claims; they
+              do not independently prove invoices true
             </div>
           </section>
-
-          <section
-            class="scene proof-scene"
-            data-scene="7"
-            aria-label="Public release evidence"
-          >
-            <div class="copy">
-              <div class="eyebrow" data-in="0">08 / INSPECT THE PROOF</div>
-              <h1 data-in="1">Onchain.<br /><em>Open to inspect.</em></h1>
-              <p data-in="2">
-                An active attestation. Verified sources.<br />A public facility
-                on Arbitrum Sepolia.
-              </p>
-              <div class="proof-stats" data-in="3">
-                <div><b>14</b><span>Source-verified contracts</span></div>
-                <div><b>375k</b><span>tUSD initially supplied</span></div>
+          <section class="scene fund" data-scene="5">
+            <div class="top-copy">
+              <div class="eyebrow" data-in="0">02 / FINANCE THE BUSINESS</div>
+              <h1 data-in="0">
+                An investor position.<br /><em
+                  >A business with working capital.</em
+                >
+              </h1>
+            </div>
+            <div class="fund-panels">
+              <div class="fund-panel deposit">
+                <span class="tiny">INVESTOR DEPOSITS</span
+                ><b><span id="deposit-number">0</span><small>tUSD</small></b>
+                <div class="fund-result">
+                  <span>Receives approximately</span
+                  ><strong>25,000 pCREDIT</strong>
+                </div>
               </div>
-              <div class="proof-link" data-in="4">
-                pool-omega-five.vercel.app ↗
+              <div class="fund-between">
+                <span>→</span><b>MORPHO</b
+                ><small>Collateral-backed<br />lending</small>
+              </div>
+              <div class="fund-panel borrowing">
+                <span class="tiny">BUSINESS BORROWS</span
+                ><b><span id="borrow-number">0</span><small>tUSD</small></b>
+                <div class="ltv"><i></i><span></span></div>
+                <div class="ltv-label">
+                  <span>51.55% LTV</span><strong>62.50% limit</strong>
+                </div>
               </div>
             </div>
-            <div class="visual proof-visual">
-              <div class="browser-shot" data-in="1">
-                <div class="browser-chrome">
-                  <i></i><i></i><i></i><span>pool / overview</span
-                  ><b>PUBLIC TESTNET</b>
-                </div>
+            <div class="caption" id="fund-caption">
+              The investor receives a share of the lending position.
+            </div>
+            <div class="bottom-line">
+              Illustrative deposit and draw · 485,000 tUSD collateral book value
+              · fixed demo borrowing APR: 12%
+            </div>
+          </section>
+          <section class="scene trade dark" data-scene="6">
+            <div class="copy">
+              <div class="eyebrow" data-in="0">
+                03 / SELL A COMPONENT, NOT THE WHOLE POSITION
+              </div>
+              <h1 data-in="0">
+                Your future yield.<br /><em
+                  >Someone else's<br />next position.</em
+                >
+              </h1>
+              <p data-in="1">
+                A funded buyer signs a quote.<br />Tokens and payment exchange
+                atomically.
+              </p>
+            </div>
+            <div class="trade-board">
+              <div class="trade-party seller">
+                <span>INVESTOR</span><b>1,000 YT</b
+                ><small>Keeps their PT</small>
+              </div>
+              <div class="trade-party buyer">
+                <span>DEMO BUYER</span><b>5 tUSD</b
+                ><small>Receives future yield exposure</small>
+              </div>
+              <svg viewBox="0 0 660 400">
+                <path id="sell-path" d="M130 150H530" />
+                <path id="pay-path" d="M530 255H130" />
+                <path class="trace orange" data-path="sell-path" />
+                <path class="trace" data-path="pay-path" />
+                <g class="moving-label" data-follow="sell-path">
+                  <rect x="-36" y="-21" width="72" height="42" rx="21" />
+                  <text text-anchor="middle" dy="5">YT →</text>
+                </g>
+                <g class="moving-label cash" data-follow="pay-path">
+                  <rect x="-42" y="-21" width="84" height="42" rx="21" />
+                  <text text-anchor="middle" dy="5">← tUSD</text>
+                </g>
+              </svg>
+              <div class="trade-confirmation" id="trade-confirmation">
+                Quote signed · balances checked
+              </div>
+            </div>
+            <div class="bottom-line">
+              Illustrative quote at a chosen demo price · operator-funded buyer
+              · no guaranteed exit or independent liquidity claimed
+            </div>
+          </section>
+          <section class="scene repay" data-scene="7">
+            <div class="copy">
+              <div class="eyebrow" data-in="0">04 / FOLLOW THE CASH HOME</div>
+              <h1 data-in="0">
+                An invoice pays.<br /><em>The debt comes down.</em>
+              </h1>
+              <p data-in="1">
+                Collection moves cash into the pool.<br />A repayment sweep
+                reduces the loan.
+              </p>
+            </div>
+            <div class="repay-board">
+              <div class="payment-in">
+                <span class="tiny">COLLECTION / SG-001</span
+                ><b>+1,000 <small>tUSD</small></b>
+              </div>
+              <div class="ledger-row">
+                <span>Receivable book value</span><b>↓</b
+                ><small>Recognize the collection</small>
+              </div>
+              <div class="ledger-row">
+                <span>Cash in the pool</span><b>↑</b
+                ><small>Actual token transfer</small>
+              </div>
+              <div class="ledger-row">
+                <span>Outstanding loan debt</span><b>↓</b
+                ><small>After repayment sweep</small>
+              </div>
+            </div>
+            <div class="caption">One cash flow. No double-counting.</div>
+            <div class="bottom-line">
+              Illustrative collection · credit losses affect lenders;
+              withdrawals depend on available liquidity
+            </div>
+          </section>
+          <section class="scene proof" data-scene="8">
+            <div class="proof-copy">
+              <div class="eyebrow" data-in="0">
+                BUILT. DEPLOYED. INSPECTABLE.
+              </div>
+              <h1 data-in="0">This part is<br /><em>already onchain.</em></h1>
+              <div class="proof-stat">
+                <b>14</b><span>source-verified contracts</span>
+              </div>
+              <div class="proof-stat">
+                <b>375k</b><span>tUSD initially supplied</span>
+              </div>
+              <div class="proof-status">
+                <i></i> Portfolio attestation published & admitted
+              </div>
+            </div>
+            <div class="product-window">
+              <div class="window-bar">
+                <i></i><i></i><i></i><span>pool-omega-five.vercel.app</span>
+              </div>
+              <div class="product-crop">
                 <img
                   src="assets/overview.png"
-                  alt="Actual Pool public frontend capture showing 375,000 supplied capital and 485,000 collateral book NAV"
+                  alt="Actual public Pool release capture showing 375,000 tUSD supplied and 485,000 tUSD collateral book value"
                 />
               </div>
-              <div class="proof-badge" data-in="3">
-                <span>✓</span>
-                <div>
-                  Public attestation active<small
-                    >Recorded release · 4 October 2026</small
-                  >
-                </div>
-              </div>
             </div>
-            <div class="scene-note">
-              Actual release capture · synthetic assets and test dollars ·
-              public deposit, borrowing, split and trade still pending at
-              capture
+            <div class="bottom-line">
+              Actual release capture · 4 Oct 2026 · full public
+              deposit-to-repayment walkthrough still pending at capture
             </div>
           </section>
-
+          <section class="scene outro dark" data-scene="9">
+            <div class="eyebrow" data-in="0">
+              ATTESTED RECEIVABLES → COMPOSABLE CREDIT
+            </div>
+            <h1 data-in="0">
+              Finance the business.<br /><em
+                >Choose how you<br />hold the yield.</em
+              >
+            </h1>
+            <div class="end-brand" data-in="1">pool<span>.</span></div>
+            <div class="end-link" data-in="2">
+              Explore the public testnet demo <span>↗</span
+              ><b>pool-omega-five.vercel.app</b>
+            </div>
+            <div class="bottom-line">
+              Synthetic receivables · test dollars · Pool-operated Morpho and
+              Pendle instances · no live real-world integrations
+            </div>
+          </section>
           <footer class="film-footer">
-            <span id="chapter-label">THE FINANCING GAP</span>
+            <span>CREDIT, MADE COMPOSABLE.</span>
             <div id="film-ticks"></div>
-            <span>REAL TRANSACTIONS. SYNTHETIC ASSETS.</span>
+            <span>TESTNET · SYNTHETIC ASSETS</span>
           </footer>
-          <div class="hero-caption">
-            <span>Attest.</span><span>Finance.</span><span>Compose.</span
-            ><small>TESTNET · ILLUSTRATIVE FLOW</small>
-          </div>
+          <div id="cut-line"></div>
         </div>
       </div>
       <section class="controls" aria-label="Film controls">
@@ -483,21 +407,22 @@
           <button id="play" class="play" aria-label="Play presentation">
             ▶</button
           ><button id="restart" aria-label="Restart presentation">↺</button
-          ><output id="time">0:00 / 2:00</output>
+          ><output id="time">0:00 / 1:08</output>
         </div>
         <input
           id="seek"
           type="range"
           min="0"
-          max="120"
+          max="68"
           step="0.01"
           value="0"
           aria-label="Presentation time"
         />
         <div class="mode-control">
-          <button id="story-mode" aria-pressed="true">Full story</button
+          <button id="story-mode" aria-pressed="true">
+            Launch film <span>68s</span></button
           ><button id="hero-mode" aria-pressed="false">
-            Hero loop <span>18s</span>
+            Hero cut <span>20s</span>
           </button>
         </div>
         <button id="fullscreen" aria-label="Enter fullscreen">⛶</button>
@@ -509,14 +434,11 @@
       ></nav>
       <div class="context-note">
         <span id="mode-description"
-          >A two-minute visual walkthrough. Future demo actions are labeled
-          illustrative; the final scene uses an actual release capture.</span
-        ><span>SPACE TO PLAY / PAUSE <b>·</b> ← → TO SEEK</span>
+          >The mechanism in 20 seconds. The evidence in 68. Illustrative actions
+          are labeled.</span
+        ><a href="pool-story.mp4" download>Download launch film ↓</a
+        ><a href="pool-hero.mp4" download>Download hero cut ↓</a>
       </div>
-      <noscript
-        >This animated presentation needs JavaScript. The live demo is available
-        at pool-omega-five.vercel.app.</noscript
-      >
     </main>
     <script src="film.js"></script>
   </body>

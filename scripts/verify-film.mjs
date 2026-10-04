@@ -27,7 +27,7 @@ try {
   page.on("console", (m) => {
     if (m.type() === "error") errors.push(m.text());
   });
-  await page.goto("http://127.0.0.1:4176/film/");
+  await page.goto("http://127.0.0.1:4176/film/?autoplay=0");
   await expect(
     page.getByRole("button", { name: "Play presentation", exact: true }),
   ).toBeVisible();
@@ -45,7 +45,7 @@ try {
     .getByRole("button", { name: "Pause presentation", exact: true })
     .click();
   checks.push("Play and pause controls advance deterministic timeline");
-  const starts = [0, 14, 29, 44, 58, 76, 91, 106];
+  const starts = [0, 3, 7, 13, 21, 29, 38, 46, 54, 62];
   for (let i = 0; i < starts.length; i++) {
     await page.evaluate(({ t }) => window.poolFilm.seek(t, "story"), {
       t: starts[i] + 2,
@@ -64,7 +64,7 @@ try {
       const bounds = document.querySelector("#stage").getBoundingClientRect();
       return [
         ...scene.querySelectorAll(
-          "h1,p,.scene-note,.verification-card,.borrow-card,.trade-ticket,.collection-card",
+          "h1,p,.bottom-line,.evidence-panel,.fund-panel,.trade-board,.repay-board",
         ),
       ]
         .filter((el) => {
@@ -82,18 +82,17 @@ try {
       .locator("#stage")
       .screenshot({ path: `.runtime/film-scene-${i}.png` });
   }
-  checks.push("All eight scenes render inside the frame");
-  await page
-    .getByRole("button", { name: "Hero loop 18s", exact: true })
-    .click();
+  checks.push("All ten scenes render inside the frame");
+  await page.getByRole("button", { name: "Hero cut 20s", exact: true }).click();
   assert.equal(
     (await page.evaluate(() => window.poolFilm.getState())).duration,
-    18,
+    20,
   );
   for (const [t, scene] of [
-    [2, "1"],
-    [8, "3"],
-    [14, "4"],
+    [1, "0"],
+    [4, "1"],
+    [8, "2"],
+    [16, "3"],
   ]) {
     await page.evaluate((t) => window.poolFilm.seek(t, "hero"), t);
     assert.equal(
@@ -101,7 +100,41 @@ try {
       scene,
     );
   }
-  checks.push("Hero mode has an independent 18-second three-scene timeline");
+  checks.push(
+    "Hero mode establishes problem, financing and tokenization in 20 seconds",
+  );
+  // Verify actual path endpoints, not just a visually moving dot.
+  await page.evaluate(() => window.poolFilm.seek(17, "story"));
+  for (const id of ["pt-path", "yt-path"]) {
+    const arrived = await page.evaluate((id) => {
+      const path = document.getElementById(id);
+      const end = path.getPointAtLength(path.getTotalLength());
+      const dot = document.querySelector(`[data-follow="${id}"]`);
+      return {
+        progress: Number(dot.dataset.progress),
+        x: Number(dot.getAttribute("cx")),
+        y: Number(dot.getAttribute("cy")),
+        endX: end.x,
+        endY: end.y,
+      };
+    }, id);
+    assert.equal(arrived.progress, 1);
+    assert(
+      Math.abs(arrived.x - arrived.endX) < 0.1 &&
+        Math.abs(arrived.y - arrived.endY) < 0.1,
+    );
+  }
+  assert.equal(await page.locator(".token.arrived").count(), 2);
+  checks.push(
+    "Both split particles reach their exact SVG endpoints and activate the received PT/YT tokens",
+  );
+  await page.evaluate(() => window.poolFilm.seek(18, "story"));
+  const a = await page.locator("#stage").screenshot();
+  await page.evaluate(() => window.poolFilm.seek(0, "story"));
+  await page.evaluate(() => window.poolFilm.seek(18, "story"));
+  const b = await page.locator("#stage").screenshot();
+  assert(a.equals(b), "Seeking must produce deterministic frames");
+  checks.push("Seeking backward and forward produces identical frames");
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({
     path: "docs/screenshots/film-mobile.png",

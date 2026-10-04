@@ -1,9 +1,9 @@
 {
-  "renderedAt": "2026-10-04T08:25:37.951Z",
+  "renderedAt": "2026-10-04T08:42:16.289Z",
   "mode": "hero",
   "fps": 24,
-  "seconds": 18,
-  "frames": 432,
+  "seconds": 20,
+  "frames": 480,
   "output": "public/film/pool-hero.mp4",
   "metadata": {
     "programs": [],
@@ -17,8 +17,8 @@
       }
     ],
     "format": {
-      "duration": "18.000000",
-      "size": "291396"
+      "duration": "20.000000",
+      "size": "313270"
     }
   },
   "errors": []

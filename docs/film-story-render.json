@@ -1,0 +1,25 @@
+{
+  "renderedAt": "2026-10-04T08:43:34.972Z",
+  "mode": "story",
+  "fps": 24,
+  "seconds": 68,
+  "frames": 1632,
+  "output": "public/film/pool-story.mp4",
+  "metadata": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "24/1"
+      }
+    ],
+    "format": {
+      "duration": "68.000000",
+      "size": "3797153"
+    }
+  },
+  "errors": []
+}

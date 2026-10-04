@@ -8,15 +8,33 @@ The editable film lives in `public/film/index.html`, with `film.css` and `film.j
 python3 -m http.server 4176 --bind 127.0.0.1 --directory public
 ```
 
-Open `http://127.0.0.1:4176/film/`. The page includes a two-minute, eight-chapter story and a separate 18-second hero loop. Playback, scrubbing, chapter selection, fullscreen, and keyboard controls are available. Reduced-motion preferences disable autoplay.
+Open `http://127.0.0.1:4176/film/`. The page includes a 68-second, ten-scene launch film and a separate 20-second hero cut. Playback, scrubbing, chapter selection, fullscreen, and keyboard controls are available. The page starts immediately unless reduced motion or autoplay=0 is requested. Reduced-motion preferences disable autoplay.
 
 - Full story: `/film/`
+- Encoded 1080p launch film: `/film/pool-story.mp4`
 - Hero preview: `/film/?mode=hero`
 - Clean hero animation: `/film/?mode=hero&capture=1&autoplay=1`
 - Encoded silent hero: `/film/pool-hero.mp4`
 - Poster: `/film/pool-hero-poster.png`
 
-The initial film uses the actual public release capture from 2026-10-04. Deposit, borrowing, PT/YT split, quote settlement, and collection scenes are illustrative and explicitly labeled. Replace these scenes or their status captions with actual public transaction evidence before presenting the film as a completed public lifecycle. No narration is included. This is a visual walkthrough, not the finished submission video.
+The initial film uses the actual public release capture from 2026-10-04. Deposit, borrowing, PT/YT split, quote settlement, and collection scenes are illustrative and explicitly labeled. Replace these scenes or their status captions with actual public transaction evidence before presenting the film as a completed public lifecycle. No narration is included. The launch film explains the mechanism, but should be supplemented with completed public transaction evidence for the final submission.
+
+## Launch pacing
+
+| Time   | Purpose                                  | Motion                                                          |
+| ------ | ---------------------------------------- | --------------------------------------------------------------- |
+| 0–3s   | Hook: invoices wait; capital should not  | Invoice and working-capital card arrive immediately             |
+| 3–7s   | Introduce Pool and the proposition       | Product reveal and protocol sequence                            |
+| 7–13s  | Explain the full capital flow            | Investor deposit, business borrowing, interest flowing back     |
+| 13–21s | Show the differentiated composition      | Lending position splits along complete paths into PT and YT     |
+| 21–29s | Explain attestation                      | Evidence rows validate, signer appears, portfolio admitted      |
+| 29–38s | Make funding concrete                    | Deposit and borrowing counters, LTV meter                       |
+| 38–46s | Explain a funded YT trade                | YT and tUSD move in opposite directions and settle together     |
+| 46–54s | Show collection and repayment            | Collection followed by successive accounting updates            |
+| 54–62s | Establish public implementation evidence | Actual captured application, source count and initial liquidity |
+| 62–68s | Close with the product proposition       | Product name and public URL                                     |
+
+The 20-second hero uses a tighter version of the opening four scenes. The mechanism is visible before the detailed walkthrough begins. PT/YT dots use actual SVG path lengths and endpoint coordinates; completion activates the received token cards. The film does not claim invention of Morpho, Pendle, or a proven first-of-its-kind primitive.
 
 ## Deterministic rendering
 
@@ -25,7 +43,7 @@ All motion is controlled by `window.poolFilm.seek(seconds, mode)`, so screenshot
 ```sh
 node scripts/verify-film.mjs
 node scripts/render-film.mjs hero
-# Optional full two-minute MP4, 1920x1080:
+# Full 68-second MP4, 1920x1080:
 FILM_WIDTH=1920 node scripts/render-film.mjs story
 ```
 
