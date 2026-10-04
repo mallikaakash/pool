@@ -1,0 +1,25 @@
+{
+  "renderedAt": "2026-10-04T08:25:37.951Z",
+  "mode": "hero",
+  "fps": 24,
+  "seconds": 18,
+  "frames": 432,
+  "output": "public/film/pool-hero.mp4",
+  "metadata": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "24/1"
+      }
+    ],
+    "format": {
+      "duration": "18.000000",
+      "size": "291396"
+    }
+  },
+  "errors": []
+}

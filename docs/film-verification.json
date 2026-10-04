@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-10-04T08:26:03.118Z",
+  "checks": [
+    "Play and pause controls advance deterministic timeline",
+    "All eight scenes render inside the frame",
+    "Hero mode has an independent 18-second three-scene timeline",
+    "Mobile controls fit without horizontal overflow",
+    "Reduced-motion preference prevents autoplay"
+  ],
+  "errors": [],
+  "passed": true
+}
