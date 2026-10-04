@@ -4,8 +4,8 @@ The homepage now explains the payment gap before the protocol components: a busi
 
 ## Implemented
 
-- Separate marketing navigation and app navigation: Invest, Portfolio, Market and Proof, plus operator controls. Existing hash URLs remain valid.
-- Four-step investor guide driven by wallet and position state. Disconnected example balances are explicitly labeled. Connecting clears the preview while the new account loads.
+- One shared, sticky navigation bar: Home, Invest, Portfolio, Market, Proof and About, plus operator controls. Header height is 74px on desktop and 64px on mobile. Existing hash URLs remain valid.
+- Four-step investor guide driven by wallet and position state. Disconnected visitors see public facility state and empty personal balances; the read context no longer falls back to the configured investor. Connecting reads the visitor's own position.
 - tUSD currency labels and a persistent testnet disclosure; source publication is distinguished from an independent audit.
 - Contextual zero-APY explanation, utilization calculation, and distinction between annualized yield, earned interest and withdrawable liquidity.
 - PT/YT explanations and a lending-position prerequisite for first-time visitors.
@@ -29,6 +29,12 @@ The homepage now explains the payment gap before the protocol components: a busi
 - Mainnet readiness, independent security audit, independent attestor/buyer demand, legal asset rights, and real invoice integrations.
 
 No contract, rate model, wallet role, deployment address or public manifest was changed.
+
+## Judge-facing simplification
+
+Removed the separate Enter app navigation, the example-investor balance preview, prefilled seller/amount/price inputs, and the public shortcut that sent YT to a predefined demo trader. The public Yield lab now links to the real signed-offer workflow. Homepage funding is explicitly test funding in one test facility; the existing synthetic collateral and currency remain labelled. Educational illustrations and the About calculator remain clearly illustrative rather than live balances.
+
+The public verifier checks sticky positioning and identical navigation across routes, desktop/mobile header heights, hidden disconnected balances, and empty quote inputs. The disposable-chain rehearsal additionally proves that a fresh wallet outside the configured roles can claim 10,000 tUSD, deposit 100 tUSD and split 50 lending shares. Test ETH is still required for gas. Borrowing and servicing require the operator; a secondary sale requires a separate funded counterparty.
 
 ## About page
 

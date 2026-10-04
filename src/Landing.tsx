@@ -76,7 +76,7 @@ export default function Landing({
       <section className="landing-hero" aria-labelledby="hero-title">
         <div className="landing-copy">
           <span className="lime-label">
-            <i /> Real cash flows. New possibilities.
+            <i /> Receivables. Lending. Principal + yield.
           </span>
           <h1 id="hero-title">
             Trade credit,
@@ -193,7 +193,7 @@ export default function Landing({
             </div>
             <div className="live-pool-card" aria-label="Live pool status">
               <div className="live-card-title">
-                <span>Pool, right now</span>
+                <span>Test facility · live</span>
                 <button
                   aria-label="Open live pool"
                   onClick={() => navigate("overview")}
@@ -203,7 +203,7 @@ export default function Landing({
               </div>
               <div className="live-number">
                 <strong>{cash(s?.market.totalSupply)}</strong>
-                <span>tUSD supplied</span>
+                <span>tUSD supplied · test funding</span>
               </div>
               <div className="live-number lime">
                 <strong>{cash(s?.pool.nav)}</strong>
@@ -241,6 +241,19 @@ export default function Landing({
           See the proof <ArrowUpRight size={16} />
         </button>
       </section>
+      <div className="judge-start" aria-label="How to try Pool">
+        <div>
+          <b>One facility. Try the actual flow.</b>
+          <p>
+            Inspect the contracts without connecting. Use your own wallet to
+            claim tUSD, deposit and split a position. The funding and invoices
+            are test fixtures, not customer adoption.
+          </p>
+        </div>
+        <button onClick={() => navigate("overview")}>
+          Start the walkthrough <ArrowRight size={17} />
+        </button>
+      </div>
       <section className="landing-why" aria-labelledby="why-title">
         <div className="section-intro">
           <span className="section-kicker">WHY POOL EXISTS</span>
@@ -406,7 +419,7 @@ export default function Landing({
           <div className="folio folio-front">
             <span>POOL / SG-001</span>
             <FileCheck2 size={38} />
-            <b>5 receivables.</b>
+            <b>{s ? s.invoices.length : "—"} test receivables.</b>
             <span>ONE ATTESTED PORTFOLIO</span>
             <div className="folio-lines">
               <i />
@@ -422,12 +435,12 @@ export default function Landing({
         <div className="facility-copy">
           <span className="section-kicker">THE FACILITY / 02</span>
           <h2>
-            Singapore trade credit.
+            One test facility.
             <br />
             <span>Open to inspect.</span>
           </h2>
           <p>
-            Five synthetic receivables. One isolated lending market. Follow the
+            A synthetic portfolio and one isolated lending market. Follow the
             portfolio evidence, the capital supplied, and every confirmed
             transaction.
           </p>

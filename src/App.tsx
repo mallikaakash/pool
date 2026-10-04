@@ -199,10 +199,13 @@ function AmountForm({
       {max !== undefined && (
         <div className="balance">
           <span>
-            Available: {number(max, 6)} {unit}
+            {walletUX && !walletUX.connected
+              ? "Connect to see your balance"
+              : `Available: ${number(max, 6)} ${unit}`}
           </span>
           <button
             type="button"
+            disabled={Boolean(walletUX && !walletUX.connected)}
             onClick={() => setAmount((Math.floor(max * 1e6) / 1e6).toFixed(6))}
           >
             MAX
@@ -226,8 +229,7 @@ function AmountForm({
       </button>
       {walletUX && !walletUX.connected && (
         <p className="form-hint">
-          Connect your wallet to use this action. Preview balances belong to the
-          example investor.
+          Connect your wallet to use this action with your own test tokens.
         </p>
       )}
     </form>
@@ -638,13 +640,15 @@ export function Overview({
           </p>
         </div>
         <div className="heading-aside">
-          <span className="eyebrow">
+          <span className="eyebrow">YOUR LENDING POSITION</span>
+          <strong>
+            {walletUX && !walletUX.connected ? "—" : money(s.investor.value, 2)}
+          </strong>
+          <span>
             {walletUX && !walletUX.connected
-              ? "EXAMPLE INVESTOR POSITION"
-              : "YOUR LENDING POSITION"}
+              ? "Connect to view your position"
+              : `${number(s.investor.shares)} pCREDIT shares`}
           </span>
-          <strong>{money(s.investor.value, 2)}</strong>
-          <span>{number(s.investor.shares)} pCREDIT shares</span>
           <button className="text-link" onClick={() => navigate("yield")}>
             Explore yield strategies
             <ArrowUpRight size={15} />
@@ -911,10 +915,12 @@ export function Overview({
               </b>
             </div>
             <div>
-              <span>
-                {walletUX && !walletUX.connected ? "Example wallet" : "Wallet"}
-              </span>
-              <CopyButton value={s.actors.investor} />
+              <span>Wallet</span>
+              {walletUX && !walletUX.connected ? (
+                <b>Not connected</b>
+              ) : (
+                <CopyButton value={s.actors.investor} />
+              )}
             </div>
           </div>
           <Note>
@@ -926,7 +932,7 @@ export function Overview({
             {s.network.chainId === 31337
               ? "Uses a pre-funded disposable demo wallet"
               : walletUX && !walletUX.connected
-                ? "Read-only preview · test dollars only"
+                ? "Public facility data · connect to transact"
                 : "Your connected wallet · test dollars only"}
           </div>
         </aside>
@@ -1210,10 +1216,12 @@ export function YieldLab({
   s,
   act,
   busy,
+  onTrade,
 }: {
   s: Snapshot;
   act: Action;
   busy: boolean;
+  onTrade?: () => void;
 }) {
   const walletUX = useWalletUX();
   const [mode, setMode] = useState<"split" | "redeem">("split");
@@ -1271,11 +1279,11 @@ export function YieldLab({
           <div className="token-balance">
             <span>
               {walletUX && !walletUX.connected
-                ? "EXAMPLE INVESTOR PT"
+                ? "CONNECT TO VIEW YOUR PT"
                 : "YOUR PT BALANCE"}
             </span>
             <strong>
-              {number(s.yield.pt, 4)}
+              {walletUX && !walletUX.connected ? "—" : number(s.yield.pt, 4)}
               <small>PT</small>
             </strong>
           </div>
@@ -1308,18 +1316,22 @@ export function YieldLab({
           <div className="token-balance">
             <span>
               {walletUX && !walletUX.connected
-                ? "EXAMPLE INVESTOR YT"
+                ? "CONNECT TO VIEW YOUR YT"
                 : "YOUR YT BALANCE"}
             </span>
             <strong>
-              {number(s.yield.yt, 4)}
+              {walletUX && !walletUX.connected ? "—" : number(s.yield.yt, 4)}
               <small>YT</small>
             </strong>
           </div>
           <dl>
             <div>
               <dt>Claimable now</dt>
-              <dd>{number(s.yield.claimable, 6)} SY</dd>
+              <dd>
+                {walletUX && !walletUX.connected
+                  ? "—"
+                  : `${number(s.yield.claimable, 6)} SY`}
+              </dd>
             </div>
             <div>
               <dt>Return profile</dt>
@@ -1403,7 +1415,11 @@ export function YieldLab({
             right={<ArrowDownLeft size={21} />}
           />
           <div className="claim-value">
-            <strong>{number(s.yield.claimable, 6)}</strong>
+            <strong>
+              {walletUX && !walletUX.connected
+                ? "—"
+                : number(s.yield.claimable, 6)}
+            </strong>
             <span>SY available to claim</span>
           </div>
           <button
@@ -1416,7 +1432,10 @@ export function YieldLab({
           </button>
           <div className="unwrap-row">
             <span>
-              Claimed SY balance <b>{number(s.yield.sy, 6)}</b>
+              Claimed SY balance{" "}
+              <b>
+                {walletUX && !walletUX.connected ? "—" : number(s.yield.sy, 6)}
+              </b>
             </span>
             <button
               className="text-link"
@@ -1430,29 +1449,46 @@ export function YieldLab({
             </button>
           </div>
         </section>
-        <section className="card">
-          <CardHead
-            title="Transfer the income rights"
-            right={<Split size={21} />}
-          />
-          <p className="body-copy">
-            Send YT to a separate demo trader while keeping your PT. This
-            demonstrates independent ownership of future income.
-          </p>
-          <AmountForm
-            label="Yield tokens to transfer"
-            button="Transfer YT to demo trader"
-            defaultValue="100"
-            unit="YT"
-            max={s.yield.yt}
-            busy={busy}
-            onSubmit={(amount) => act("transferYT", { amount })}
-          />
-          <p className="fine-print">
-            A transfer does not pay you. Open Market to sell PT or YT against a
-            funded, signed offer; there is no guaranteed buyer.
-          </p>
-        </section>
+        {onTrade ? (
+          <section className="card">
+            <CardHead title="Sell a component" right={<Split size={21} />} />
+            <p className="body-copy">
+              A buyer can offer test dollars for your PT or YT. Review the
+              signed offer and settle the trade from your own wallet.
+            </p>
+            <button className="secondary full-width" onClick={onTrade}>
+              Open Market <ArrowUpRight size={16} />
+            </button>
+            <p className="fine-print">
+              Requires a second, funded wallet. There is no standing buyer or
+              automatic exit.
+            </p>
+          </section>
+        ) : (
+          <section className="card">
+            <CardHead
+              title="Transfer the income rights"
+              right={<Split size={21} />}
+            />
+            <p className="body-copy">
+              Send YT to a separate demo trader while keeping your PT. This
+              demonstrates independent ownership of future income.
+            </p>
+            <AmountForm
+              label="Yield tokens to transfer"
+              button="Transfer YT to demo trader"
+              defaultValue="100"
+              unit="YT"
+              max={s.yield.yt}
+              busy={busy}
+              onSubmit={(amount) => act("transferYT", { amount })}
+            />
+            <p className="fine-print">
+              A transfer does not pay you. Open Market to sell PT or YT against
+              a funded, signed offer; there is no guaranteed buyer.
+            </p>
+          </section>
+        )}
       </div>
       <div className="space-top">
         <Note>
@@ -1477,6 +1513,7 @@ export function Servicing({
 }) {
   const [invoiceId, setInvoiceId] = useState(0),
     [loss, setLoss] = useState("0");
+  const walletUX = useWalletUX();
   const inv = s.invoices[invoiceId];
   return (
     <>
@@ -1514,9 +1551,13 @@ export function Servicing({
           note="Cash controlled by the portfolio contract"
         />
         <Metric
-          label="BACKSTOP CASH"
-          value={money(s.backstop.cash)}
-          note={`${number(s.backstop.collateral)} rINV acquired`}
+          label="LIQUIDATION WALLET CASH"
+          value={walletUX && !walletUX.connected ? "—" : money(s.backstop.cash)}
+          note={
+            walletUX && !walletUX.connected
+              ? "Connect to view your available funds"
+              : `${number(s.backstop.collateral)} rINV acquired`
+          }
         />
       </div>
       <div className="servicing-grid">

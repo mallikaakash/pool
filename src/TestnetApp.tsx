@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import {
   LayoutDashboard,
+  Home,
+  BookOpen,
   Files,
   ArrowLeftRight,
   ShieldCheck,
@@ -348,6 +350,13 @@ export default function TestnetApp() {
   const marketingPage = page === "home" || page === "about";
   const nav = [
     {
+      id: "home",
+      label: "Home",
+      icon: Home,
+      pages: ["home"],
+      description: "Start with the product",
+    },
+    {
       id: "overview",
       label: "Invest",
       icon: LayoutDashboard,
@@ -374,6 +383,13 @@ export default function TestnetApp() {
       icon: ShieldCheck,
       pages: ["evidence", "activity"],
       description: "Review signed claims and confirmed transactions",
+    },
+    {
+      id: "about",
+      label: "About",
+      icon: BookOpen,
+      pages: ["about"],
+      description: "Understand the financial mechanism",
     },
   ];
   const subnav = ["overview", "yield"].includes(page)
@@ -428,99 +444,48 @@ export default function TestnetApp() {
               className={`pool-navigation ${menuOpen ? "is-open" : ""}`}
               aria-label="Main navigation"
             >
-              {marketingPage ? (
-                <>
-                  {page === "about" ? (
-                    <button onClick={() => navigate("home")}>Home</button>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => {
-                          setMenuOpen(false);
-                          document
-                            .querySelector(".landing-how")
-                            ?.scrollIntoView({ behavior: "smooth" });
-                        }}
-                      >
-                        How it works
-                      </button>
-                      <button
-                        onClick={() => {
-                          setMenuOpen(false);
-                          document
-                            .querySelector(".landing-why")
-                            ?.scrollIntoView({ behavior: "smooth" });
-                        }}
-                      >
-                        Why Pool
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => navigate("about")}
-                    aria-current={page === "about" ? "page" : undefined}
-                    className={page === "about" ? "nav-active" : ""}
-                  >
-                    About
-                  </button>
-                  <button onClick={() => navigate("evidence")}>Proof</button>
-                </>
-              ) : (
-                nav.map(({ id, label, icon: Icon, pages, description }) => (
-                  <button
-                    key={id}
-                    className={pages.includes(page) ? "nav-active" : ""}
-                    title={description}
-                    aria-current={pages.includes(page) ? "page" : undefined}
-                    onClick={() => navigate(id)}
-                  >
-                    <Icon size={17} />
-                    <span>{label}</span>
-                  </button>
-                ))
-              )}
-              {!marketingPage && (
-                <details className="workspace-menu">
-                  <summary
-                    className={
-                      ["servicing", "activity", "setup"].includes(page)
-                        ? "nav-active"
-                        : ""
-                    }
-                  >
-                    Operator <ChevronDown size={14} />
-                  </summary>
-                  <div>
-                    {["servicing", "setup"].map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => navigate(p)}
-                        aria-current={page === p ? "page" : undefined}
-                      >
-                        {p[0].toUpperCase() + p.slice(1)}
-                      </button>
-                    ))}
-                  </div>
-                </details>
-              )}
+              {nav.map(({ id, label, icon: Icon, pages, description }) => (
+                <button
+                  key={id}
+                  className={pages.includes(page) ? "nav-active" : ""}
+                  title={description}
+                  aria-current={pages.includes(page) ? "page" : undefined}
+                  onClick={() => navigate(id)}
+                >
+                  <Icon size={17} />
+                  <span>{label}</span>
+                </button>
+              ))}
+              <details className="workspace-menu">
+                <summary
+                  className={
+                    ["servicing", "activity", "setup"].includes(page)
+                      ? "nav-active"
+                      : ""
+                  }
+                >
+                  Operator <ChevronDown size={14} />
+                </summary>
+                <div>
+                  {["servicing", "setup"].map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => navigate(p)}
+                      aria-current={page === p ? "page" : undefined}
+                    >
+                      {p[0].toUpperCase() + p.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </details>
             </nav>
             <button
               className="connect-button"
               disabled={busy}
-              onClick={
-                marketingPage ? () => navigate("overview") : connectAccount
-              }
+              onClick={connectAccount}
             >
-              {marketingPage ? (
-                <ArrowLeftRight size={16} />
-              ) : (
-                <Wallet size={16} />
-              )}
-              {marketingPage
-                ? "Enter app"
-                : account
-                  ? short(account)
-                  : "Connect MetaMask"}
+              <Wallet size={16} />
+              {account ? short(account) : "Connect MetaMask"}
               <span className="button-orb" />
             </button>
           </div>
@@ -728,8 +693,8 @@ export default function TestnetApp() {
                 )}
                 {!account && page === "servicing" && (
                   <div className="note">
-                    Viewing the configured investor’s position. Connect your
-                    wallet to view and transact with your own funds.
+                    Facility data is public. Connect the operator wallet to
+                    manage borrowing and collections.
                   </div>
                 )}
                 {page === "overview" && (
@@ -819,7 +784,12 @@ export default function TestnetApp() {
                         {new Date(m.maturity.expiry * 1000).toLocaleString()}
                       </label>
                     )}
-                    <YieldLab s={s} act={act} busy={busy || !account} />
+                    <YieldLab
+                      s={s}
+                      act={act}
+                      busy={busy || !account}
+                      onTrade={() => navigate("trade")}
+                    />
                   </>
                 )}
                 {page === "servicing" && (
@@ -1177,9 +1147,9 @@ function Trade({
   setBid: (b: BidPacket) => void;
 }) {
   const [token, setToken] = useState("PendleYieldToken"),
-    [amount, setAmount] = useState("1000"),
-    [payment, setPayment] = useState("5"),
-    [taker, setTaker] = useState(m.roles.investor),
+    [amount, setAmount] = useState(""),
+    [payment, setPayment] = useState(""),
+    [taker, setTaker] = useState(""),
     [imported, setImported] = useState("");
   const [reviewed, setReviewed] = useState(false);
   const verify = async (packet: BidPacket) => {
@@ -1243,6 +1213,7 @@ function Trade({
             Seller wallet
             <input
               value={taker}
+              placeholder="0x… seller address"
               onChange={(e) => {
                 setTaker(e.target.value as Address);
                 setReviewed(false);
@@ -1322,6 +1293,8 @@ function Trade({
             onClick={() =>
               void work(async () => {
                 if (!account) throw Error("Connect the quote maker.");
+                if (!/^0x[0-9a-fA-F]{40}$/.test(taker))
+                  throw Error("Enter the seller wallet address.");
                 const cash = parseUnits(payment, 6),
                   quantity = parseUnits(amount, 6);
                 if (cash <= 0n || quantity <= 0n)
@@ -1343,7 +1316,7 @@ function Trade({
                 const now = (await client.getBlock()).timestamp;
                 const b = {
                   maker: account,
-                  taker,
+                  taker: taker as Address,
                   token: m.addresses[token],
                   amount: quantity.toString(),
                   payment: cash.toString(),

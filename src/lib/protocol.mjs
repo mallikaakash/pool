@@ -1,4 +1,4 @@
-import { parseUnits, formatUnits } from "viem";
+import { parseUnits, formatUnits, zeroAddress } from "viem";
 const units = (n) => parseUnits(String(n), 6);
 const num = (n) => Number(formatUnits(n, 6));
 const wad = (n) => Number(formatUnits(n, 18));
@@ -68,20 +68,23 @@ export async function snapshot(d) {
       buyers.map((_, i) => r("ReceivablePool", "invoices", [BigInt(i)])),
     ),
   ]);
-  const { result: interest } = await client.simulateContract({
-    ...(d.chainId === 421614
-      ? {
-          maxFeePerGas: (block.baseFeePerGas ?? 1n) * 2n,
-          maxPriorityFeePerGas: 0n,
-        }
-      : {}),
-    address: addresses.PendleYieldToken,
-    abi: d.artifact("PendleYieldToken").abi,
-    functionName: "redeemDueInterestAndRewards",
-    args: [actors.investor, true, false],
-    account: actors.investor,
-    blockNumber: block.number,
-  });
+  const { result: interest } =
+    actors.investor === zeroAddress
+      ? { result: [0n] }
+      : await client.simulateContract({
+          ...(d.chainId === 421614
+            ? {
+                maxFeePerGas: (block.baseFeePerGas ?? 1n) * 2n,
+                maxPriorityFeePerGas: 0n,
+              }
+            : {}),
+          address: addresses.PendleYieldToken,
+          abi: d.artifact("PendleYieldToken").abi,
+          functionName: "redeemDueInterestAndRewards",
+          args: [actors.investor, true, false],
+          account: actors.investor,
+          blockNumber: block.number,
+        });
   const supplied = num(balances[0]),
     borrowed = num(balances[2]),
     collateral = num(position[2]),

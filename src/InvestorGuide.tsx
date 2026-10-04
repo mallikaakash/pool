@@ -114,8 +114,9 @@ export function InvestorGuide({
       </ol>
       {!connected && (
         <p className="guide-preview">
-          You are browsing live testnet data. The example investor’s balances
-          are a preview, not your wallet.
+          You can inspect this facility without a wallet. Connect to see your
+          own balances and try a transaction. Test ETH pays network fees; tUSD
+          is available from the in-app faucet.
         </p>
       )}
     </section>

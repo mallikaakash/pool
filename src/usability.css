@@ -23,17 +23,6 @@
   outline: 3px solid #e3ff72;
   outline-offset: 4px;
 }
-.testnet-app .workspace-page .pool-header {
-  min-height: 70px;
-}
-.testnet-app.workspace-page .pool-brand {
-  min-height: 68px;
-  font-size: 36px;
-  width: 115px;
-}
-.testnet-app.workspace-page .pool-header-main {
-  padding: 10px 18px;
-}
 .app-context-bar {
   display: flex;
   align-items: center;
@@ -704,7 +693,7 @@
 @media (min-width: 1100px) {
   .testnet-app .overview-grid > .transact-card {
     position: sticky;
-    top: 20px;
+    top: 106px;
   }
 }
 @media (max-width: 1200px) {
@@ -719,10 +708,6 @@
   }
 }
 @media (max-width: 700px) {
-  .testnet-app.workspace-page .pool-brand {
-    width: 90px;
-    min-height: 63px;
-  }
   .app-context-bar {
     gap: 10px;
     flex-wrap: wrap;
@@ -910,5 +895,135 @@
   .testnet-app .contract-list > div {
     padding: 16px 0;
     gap: 12px;
+  }
+}
+
+/* One persistent navigation system across explanations and financial workflows. */
+.testnet-app .pool-brand {
+  min-height: 68px;
+  width: 115px;
+  font-size: 36px;
+}
+.testnet-app .pool-header-main {
+  padding: 10px 18px;
+}
+.judge-start {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 27px 30px;
+  border: 1px solid #425132;
+  border-radius: 18px;
+  background: #1c2516;
+  margin: 35px 0 0;
+}
+.judge-start b {
+  font-size: 19px;
+  font-weight: 500;
+  color: #eef3e4;
+}
+.judge-start p {
+  max-width: 760px;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-top: 8px;
+  color: #bec9b1;
+}
+.judge-start button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #dffa48;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  padding: 12px 0;
+}
+@media (max-width: 1200px) {
+  .testnet-app .pool-navigation {
+    top: 78px;
+  }
+}
+@media (max-width: 700px) {
+  .testnet-app .pool-brand {
+    width: 88px;
+    min-height: 63px;
+    font-size: 34px;
+  }
+  .testnet-app .pool-header-main {
+    padding: 7px 10px;
+  }
+  .testnet-app .pool-navigation {
+    top: 73px;
+  }
+  .judge-start {
+    flex-direction: column;
+    align-items: start;
+    padding: 23px;
+    gap: 12px;
+  }
+  .judge-start b {
+    font-size: 17px;
+  }
+  .judge-start p {
+    font-size: 12px;
+  }
+}
+
+html[data-theme="pool"] {
+  scroll-padding-top: 106px;
+}
+.testnet-app .pool-header {
+  position: sticky;
+  top: 12px;
+  height: 74px;
+  z-index: 40;
+  background: #090a08;
+  border-radius: 22px;
+  box-shadow: 0 10px 25px #090a0866;
+}
+.testnet-app .pool-brand {
+  min-height: 74px;
+  height: 74px;
+  border-radius: 20px;
+}
+.testnet-app .pool-header-main {
+  min-height: 74px;
+  height: 74px;
+  border-radius: 20px;
+}
+.testnet-app .connect-button,
+.testnet-app .pool-menu-toggle {
+  min-height: 44px;
+}
+@media (max-width: 1200px) {
+  .testnet-app .pool-navigation {
+    top: 84px;
+    max-height: calc(100dvh - 110px);
+    overflow-y: auto;
+  }
+}
+@media (max-width: 700px) {
+  html[data-theme="pool"] {
+    scroll-padding-top: 92px;
+  }
+  .testnet-app .pool-header {
+    top: 8px;
+    height: 64px;
+  }
+  .testnet-app .pool-brand,
+  .testnet-app .pool-header-main {
+    min-height: 64px;
+    height: 64px;
+    border-radius: 17px;
+  }
+  .testnet-app .pool-brand {
+    width: 88px;
+  }
+  .testnet-app .pool-navigation {
+    top: 74px;
+    max-height: calc(100dvh - 98px);
   }
 }

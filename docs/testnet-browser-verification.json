@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-04T11:34:52.065Z",
+  "at": "2026-10-04T12:47:46.216Z",
   "scope": "Public frontend and wallet adapter against a disposable chain 421614; NOT a public deployment or real MetaMask extension test",
   "checks": [
     "resumable deployment UI",
@@ -13,6 +13,8 @@
     "funded YT sale",
     "onchain attestation inspection",
     "collection and repayment",
+    "fresh non-designated wallet claims test dollars, deposits and splits",
+    "disconnect hides PT/YT balances; reconnect reads own position",
     "mobile",
     "no time travel controls",
     "zero browser errors"

@@ -4,6 +4,7 @@ import {
   createWalletClient,
   http,
   custom,
+  zeroAddress,
   parseUnits,
   keccak256,
   type Address,
@@ -168,9 +169,9 @@ export async function approve(
 export function context(m: Manifest, account?: Address) {
   const actors = {
     servicer: m.roles.operator,
-    investor: account ?? m.roles.investor,
+    investor: account ?? zeroAddress,
     liquidityProvider: m.roles.operator,
-    backstop: account ?? m.roles.operator,
+    backstop: account ?? zeroAddress,
     trader: m.roles.operator,
     attestor: m.roles.attestor,
   };

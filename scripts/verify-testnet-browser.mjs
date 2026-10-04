@@ -196,6 +196,9 @@ try {
   ).toBeVisible({ timeout: 30000 });
   await page.getByRole("button", { name: "Connect MetaMask" }).click(); // provider starts with operator after reload
   await nav("Trade");
+  await page.getByLabel("Seller wallet", { exact: true }).fill(accounts[2]);
+  await page.getByLabel("Token amount", { exact: true }).fill("1000");
+  await page.getByLabel("Total payment (tUSD)", { exact: true }).fill("5");
   await page.getByRole("button", { name: "Review offer", exact: true }).click();
   await expect(
     page.getByRole("region", { name: "Review purchase offer" }),
@@ -221,6 +224,24 @@ try {
     fullPage: true,
   });
   await nav("Overview");
+  await switchAccount(accounts[3]);
+  await expect(
+    page.getByRole("button", { name: "Get test dollars", exact: true }),
+  ).toBeVisible();
+  await click("Get test dollars", "Confirmed faucet");
+  await page.getByRole("spinbutton", { name: "Deposit amount" }).fill("100");
+  await click("Deposit test dollars", "Confirmed deposit");
+  await nav("Yield lab");
+  await page.getByRole("spinbutton", { name: "Shares to split" }).fill("50");
+  await click("Mint PT + YT", "Confirmed split");
+  await page.reload();
+  await expect(page.locator(".token-balance strong")).toHaveText(
+    ["—PT", "—YT"],
+    { timeout: 30000 },
+  );
+  await nav("Overview");
+  await switchAccount(accounts[3]);
+  await expect(page.locator(".heading-aside strong")).not.toHaveText("—");
   await page.screenshot({
     path: "docs/screenshots/testnet-overview.png",
     fullPage: true,
@@ -263,6 +284,8 @@ try {
           "funded YT sale",
           "onchain attestation inspection",
           "collection and repayment",
+          "fresh non-designated wallet claims test dollars, deposits and splits",
+          "disconnect hides PT/YT balances; reconnect reads own position",
           "mobile",
           "no time travel controls",
           "zero browser errors",

@@ -64,12 +64,37 @@ try {
   };
   const response = await page.goto(url);
   assert.equal(response.status(), 200);
+  const checkHeader = async () => {
+    const header = page.locator(".pool-header");
+    const mobile = page.viewportSize().width <= 700;
+    await expect(page.locator("#pool-navigation > button")).toHaveText([
+      "Home",
+      "Invest",
+      "Portfolio",
+      "Market",
+      "Proof",
+      "About",
+    ]);
+    await expect(
+      page.getByRole("button", { name: "Enter app", exact: true }),
+    ).toHaveCount(0);
+    assert.equal(
+      Math.round((await header.boundingBox()).height),
+      mobile ? 64 : 74,
+    );
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await expect
+      .poll(async () => Math.round((await header.boundingBox()).y))
+      .toBe(mobile ? 8 : 12);
+    await page.evaluate(() => window.scrollTo(0, 0));
+  };
   await expect(
     page.getByRole("heading", { name: "Trade credit, made composable." }),
   ).toBeVisible();
   await expect(page.locator(".live-card-footer")).toContainText("block", {
     timeout: 60000,
   });
+  await checkHeader();
   await expect(
     page.getByRole("heading", {
       name: "The work is done. The cash is still waiting.",
@@ -101,6 +126,7 @@ try {
     }),
   ).toBeVisible();
   await page.reload();
+  await checkHeader();
   await expect(
     page.getByRole("heading", {
       name: "The work is done. Let the capital move.",
@@ -177,6 +203,7 @@ try {
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
+    await checkHeader();
     assert(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -225,6 +252,17 @@ try {
     page.getByRole("button", { name: "Connect MetaMask" }),
   ).toBeVisible();
   await expect(page.getByRole("alert")).toHaveCount(0);
+  await checkHeader();
+  await expect(page.locator(".heading-aside strong")).toHaveText("—");
+  await expect(page.locator(".heading-aside")).toContainText(
+    "Connect to view your position",
+  );
+  await expect(page.locator(".amount-form .balance")).toContainText(
+    "Connect to see your balance",
+  );
+  await expect(
+    page.getByText("EXAMPLE INVESTOR POSITION", { exact: true }),
+  ).toHaveCount(0);
   await expect(
     page.getByRole("link", { name: "About Pool", exact: true }),
   ).toBeVisible();
@@ -312,6 +350,33 @@ try {
       page.getByRole("heading", { name: heading, exact: true }),
     ).toBeVisible();
     await expect(page.getByRole("alert")).toHaveCount(0);
+    await checkHeader();
+    if (tab === "Yield lab") {
+      await expect(page.locator(".token-balance strong")).toHaveText([
+        "—PT",
+        "—YT",
+      ]);
+      await expect(
+        page.getByRole("button", {
+          name: "Transfer YT to demo trader",
+          exact: true,
+        }),
+      ).toHaveCount(0);
+      await expect(
+        page.getByRole("button", { name: "Open Market", exact: true }),
+      ).toBeEnabled();
+    }
+    if (tab === "Trade") {
+      for (const name of [
+        "Seller wallet",
+        "Token amount",
+        "Total payment (tUSD)",
+      ])
+        await expect(page.getByLabel(name, { exact: true })).toHaveValue("");
+      await expect(
+        page.getByRole("button", { name: "Review offer", exact: true }),
+      ).toBeDisabled();
+    }
     checks.push(`${tab} renders without errors`);
   }
   await expect(
@@ -348,6 +413,9 @@ try {
     fullPage: true,
   });
   checks.push("Mobile evidence deep link renders without horizontal overflow");
+  checks.push(
+    "Consistent sticky navigation on every page at 74px desktop / 64px mobile; disconnected wallet balances are hidden; trade inputs start empty; no demo-trader shortcut",
+  );
   assert.deepEqual(errors, []);
   fs.writeFileSync(
     `${reportDir}/public-browser-verification.json`,
