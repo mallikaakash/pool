@@ -69,6 +69,12 @@ export async function snapshot(d) {
     ),
   ]);
   const { result: interest } = await client.simulateContract({
+    ...(d.chainId === 421614
+      ? {
+          maxFeePerGas: (block.baseFeePerGas ?? 1n) * 2n,
+          maxPriorityFeePerGas: 0n,
+        }
+      : {}),
     address: addresses.PendleYieldToken,
     abi: d.artifact("PendleYieldToken").abi,
     functionName: "redeemDueInterestAndRewards",

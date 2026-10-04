@@ -1,3 +1,4 @@
+import { freshFees } from "./fees.mjs";
 import {
   createPublicClient,
   createWalletClient,
@@ -127,14 +128,22 @@ export async function send(
   if ((await w.getAddresses())[0]?.toLowerCase() !== account.toLowerCase())
     throw Error("Account changed. Reconnect and review this action.");
   notice(`Review ${fn} in MetaMask`);
-  const { request } = await client.simulateContract({
+  await client.simulateContract({
+    ...(await freshFees(client)),
     account,
     address: m.addresses[name],
     abi: artifact(name).abi,
     functionName: fn,
     args,
   });
-  const hash = await w.writeContract(request);
+  const hash = await w.writeContract({
+    account,
+    address: m.addresses[name],
+    abi: artifact(name).abi,
+    functionName: fn,
+    args,
+    ...(await freshFees(client)),
+  });
   notice(`Waiting for confirmation: ${hash}`);
   const receipt = await client.waitForTransactionReceipt({ hash });
   if (receipt.status !== "success")
@@ -235,6 +244,7 @@ export async function publicAction(
     write: async (n: string, f: string, values: unknown[]) => {
       if (n === "YieldRouter" && ["split", "redeem"].includes(f)) {
         const { result } = await client.simulateContract({
+          ...(await freshFees(client)),
           account,
           address: a[n],
           abi: artifact(n).abi,

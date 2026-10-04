@@ -1,3 +1,4 @@
+import { freshFees } from "./fees.mjs";
 import {
   encodeFunctionData,
   encodeAbiParameters,
@@ -101,11 +102,12 @@ export async function runDeployment({
   };
   const deploy = async (name, args = [], artifactName = name) => {
     const a = artifacts[artifactName];
-    const r = await step(`Deploy ${name}`, () =>
+    const r = await step(`Deploy ${name}`, async () =>
       wallet.deployContract({
         account,
         abi: a.abi,
         bytecode: a.bytecode,
+        ...(await freshFees(client)),
         args,
       }),
     );
@@ -123,13 +125,14 @@ export async function runDeployment({
   const write = (name, fn, args = [], label = `${name}.${fn}`) =>
     step(label, async () => {
       const { request } = await client.simulateContract({
+        ...(await freshFees(client)),
         account,
         address: m.addresses[name],
         abi: artifacts[name].abi,
         functionName: fn,
         args,
       });
-      return wallet.writeContract(request);
+      return wallet.writeContract({ ...request, ...(await freshFees(client)) });
     });
   await deploy("TestDollar");
   await deploy("AttestationRegistry", [m.roles.attestor]);
@@ -198,10 +201,11 @@ export async function runDeployment({
     ytCode.slice(0, split),
     ytCode.slice(split),
   ].entries()) {
-    const r = await step(`Store Pendle creation code ${i}`, () =>
+    const r = await step(`Store Pendle creation code ${i}`, async () =>
       wallet.sendTransaction({
         account,
         data: `0x602038038060206000396000f3fefefefefefefefefefefefefefefefefefefe${piece}`,
+        ...(await freshFees(client)),
       }),
     );
     await remember(`PendleCode${i}`, r.address);
@@ -339,13 +343,14 @@ export async function runDeployment({
     );
     await step("Seed short series", async () => {
       const { request } = await client.simulateContract({
+        ...(await freshFees(client)),
         account,
         address: m.addresses.MaturityRouter,
         abi: artifacts.YieldRouter.abi,
         functionName: "split",
         args: [units(1000), units(1000)],
       });
-      return wallet.writeContract(request);
+      return wallet.writeContract({ ...request, ...(await freshFees(client)) });
     });
     for (const [name, address] of [
       ["PT", pt],
@@ -353,13 +358,17 @@ export async function runDeployment({
     ])
       await step(`Transfer short series ${name} to investor`, async () => {
         const { request } = await client.simulateContract({
+          ...(await freshFees(client)),
           account,
           address,
           abi: artifacts.TestDollar.abi,
           functionName: "transfer",
           args: [m.roles.investor, units(500)],
         });
-        return wallet.writeContract(request);
+        return wallet.writeContract({
+          ...request,
+          ...(await freshFees(client)),
+        });
       });
   }
   m.status = "ready";
