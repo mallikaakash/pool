@@ -79,6 +79,13 @@ try {
       text = text.replaceAll(real, accounts[index]);
     await route.fulfill({ response, body: text });
   });
+  await context.route("**/deployment.json", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ status: "not deployed" }),
+    }),
+  );
   await context.exposeBinding("testWalletRpc", async (_, method, params) =>
     rpc(method, params),
   );
@@ -113,11 +120,14 @@ try {
   page.on("console", (m) => {
     if (m.type() === "error") errors.push(m.text());
   });
-  const nav = async (label) =>
-    page
+  const nav = async (label) => {
+    if (["Servicing", "Activity", "Setup"].includes(label))
+      await page.locator(".workspace-menu summary").click();
+    await page
       .getByRole("navigation")
       .getByRole("button", { name: label, exact: true })
       .click();
+  };
   const switchAccount = async (address) => {
     await page.evaluate((a) => window.switchTestAccount(a), address);
     await page

@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-04T06:04:25.993Z",
+  "at": "2026-10-04T09:51:05.570Z",
   "scope": "Public frontend and wallet adapter against a disposable chain 421614; NOT a public deployment or real MetaMask extension test",
   "checks": [
     "resumable deployment UI",

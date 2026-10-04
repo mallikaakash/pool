@@ -1,5 +1,18 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import {
+  House,
+  LayoutDashboard,
+  Files,
+  Split,
+  ArrowLeftRight,
+  ShieldCheck,
+  Menu,
+  X,
+  ChevronDown,
+  Wallet,
+} from "lucide-react";
+import Landing from "./Landing";
+import {
   hashTypedData,
   verifyTypedData,
   keccak256,
@@ -44,6 +57,7 @@ import {
 } from "./lib/claims.mjs";
 import config from "../config/arbitrum-sepolia.json";
 import "./testnet.css";
+import "./redesign.css";
 const storage = "pool.testnet.deployment.v1";
 const short = (s?: string) =>
   s ? `${s.slice(0, 6)}…${s.slice(-4)}` : "Disconnected";
@@ -105,7 +119,7 @@ export default function TestnetApp() {
   const [m, setM] = useState<Manifest | null>(saved),
     [account, setAccount] = useState<Address>(),
     [s, setS] = useState<Snapshot | null>(null);
-  const [page, setPage] = useState(location.hash.slice(1) || "overview"),
+  const [page, setPage] = useState(location.hash.slice(1) || "home"),
     [busy, setBusy] = useState(false),
     [notice, setNotice] = useState(""),
     [error, setError] = useState(""),
@@ -114,6 +128,7 @@ export default function TestnetApp() {
     [eligibility, setEligibility] = useState<boolean | null>(null),
     [artifacts, setArtifacts] = useState<Record<string, unknown> | null>(null);
   const [shortSeries, setShortSeries] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const activeM = useMemo(
     () =>
       m && shortSeries && m.maturity
@@ -149,12 +164,21 @@ export default function TestnetApp() {
     }
   };
   const navigate = (p: string) => {
+    setMenuOpen(false);
+    document
+      .querySelectorAll<HTMLDetailsElement>(".workspace-menu")
+      .forEach((el) => {
+        el.open = false;
+      });
     location.hash = p;
     setPage(p);
     window.scrollTo({ top: 0 });
   };
   useEffect(() => {
-    const fn = () => setPage(location.hash.slice(1) || "overview");
+    const fn = () => {
+      setPage(location.hash.slice(1) || "home");
+      setMenuOpen(false);
+    };
     window.addEventListener("hashchange", fn);
     return () => window.removeEventListener("hashchange", fn);
   }, []);
@@ -312,61 +336,88 @@ export default function TestnetApp() {
       );
     });
   const nav = [
-    "overview",
-    "receivables",
-    "yield",
-    "trade",
-    "servicing",
-    "evidence",
-    "activity",
-    "setup",
+    { id: "home", label: "Home", icon: House },
+    { id: "overview", label: "Overview", icon: LayoutDashboard },
+    { id: "receivables", label: "Receivables", icon: Files },
+    { id: "yield", label: "Yield lab", icon: Split },
+    { id: "trade", label: "Trade", icon: ArrowLeftRight },
+    { id: "evidence", label: "Evidence", icon: ShieldCheck },
   ];
   return (
-    <div className="app-shell testnet-app">
-      <aside className="sidebar">
-        <a className="brand" href="#overview">
-          pool<span className="brand-dot">.</span>
+    <div
+      className={`app-shell testnet-app ${page === "home" ? "home-page" : "workspace-page"} ${account ? "wallet-connected" : "wallet-disconnected"}`}
+    >
+      <header className="pool-header">
+        <a className="pool-brand" href="#home" aria-label="Pool home">
+          pool<span>.</span>
         </a>
-        <div className="workspace-label">PUBLIC TESTNET</div>
-        <nav aria-label="Main navigation">
-          {nav.map((p) => (
-            <button
-              key={p}
-              className={page === p ? "nav-active" : ""}
-              onClick={() => navigate(p)}
-            >
-              {p === "yield" ? "Yield lab" : p[0].toUpperCase() + p.slice(1)}
-            </button>
-          ))}
-        </nav>
-        <div className="sidebar-bottom">
-          <div className="network-box">
-            ◈ Arbitrum Sepolia
-            <small>Real transactions · synthetic assets</small>
-          </div>
-          <p>Morpho · Pendle · Pool attestations</p>
+        <div className="pool-header-main">
+          <button
+            className="pool-menu-toggle"
+            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={menuOpen}
+            aria-controls="pool-navigation"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+          <nav
+            id="pool-navigation"
+            className={`pool-navigation ${menuOpen ? "is-open" : ""}`}
+            aria-label="Main navigation"
+          >
+            {nav.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                className={page === id ? "nav-active" : ""}
+                aria-current={page === id ? "page" : undefined}
+                onClick={() => navigate(id)}
+              >
+                <Icon size={17} />
+                <span>{label}</span>
+              </button>
+            ))}
+            <details className="workspace-menu">
+              <summary
+                className={
+                  ["servicing", "activity", "setup"].includes(page)
+                    ? "nav-active"
+                    : ""
+                }
+              >
+                Workspace <ChevronDown size={14} />
+              </summary>
+              <div>
+                {["servicing", "activity", "setup"].map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => navigate(p)}
+                    aria-current={page === p ? "page" : undefined}
+                  >
+                    {p[0].toUpperCase() + p.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </details>
+          </nav>
+          <button
+            className="connect-button"
+            disabled={busy}
+            onClick={() =>
+              void work(async () => {
+                const a = await connect();
+                setAccount(a);
+                setNotice(`Connected ${a}`);
+              })
+            }
+          >
+            <Wallet size={16} />
+            {account ? short(account) : "Connect MetaMask"}
+            <span className="button-orb" />
+          </button>
         </div>
-      </aside>
+      </header>
       <div className="main-shell">
-        <header className="topbar">
-          <b>Pool / {page}</b>
-          <div className="topbar-right">
-            <span>Arbitrum Sepolia</span>
-            <button
-              className="secondary"
-              disabled={busy}
-              onClick={() =>
-                void work(async () => {
-                  const a = await connect();
-                  setAccount(a);
-                  setNotice(`Connected ${a}`);
-                })
-              }
-            >
-              {account ? short(account) : "Connect MetaMask"}
-            </button>
-          </div>
-        </header>
         <main>
           <div className="environment-strip">
             <span>TESTNET SHOWCASE</span>
@@ -388,7 +439,9 @@ export default function TestnetApp() {
               </span>
             </div>
           )}
-          {page === "setup" ? (
+          {page === "home" ? (
+            <Landing s={s} eligibility={eligibility} navigate={navigate} />
+          ) : page === "setup" ? (
             <>
               <section className="page-heading compact">
                 <div>

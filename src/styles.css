@@ -77,7 +77,7 @@ h1 {
   line-height: 1.15;
 }
 h1 > span {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 h2 {
   font-size: 19px;
@@ -106,7 +106,7 @@ button svg {
   bottom: 0;
   left: 0;
   padding: 38px 21px 22px;
-  background: #fdfdfa;
+  background: var(--surface, #fdfdfa);
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
@@ -147,7 +147,7 @@ button svg {
 }
 .workspace-label {
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   letter-spacing: 1.8px;
   margin: 51px 13px 18px;
 }
@@ -161,7 +161,7 @@ nav button {
   display: flex;
   align-items: center;
   gap: 13px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   text-align: left;
   padding: 13px 14px;
   border-radius: 7px;
@@ -173,7 +173,7 @@ nav button:hover {
 }
 nav button.nav-active {
   background: #f8eae1;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 nav button.nav-active svg {
   stroke-width: 2.2;
@@ -182,7 +182,7 @@ nav button.nav-active svg {
   margin-left: auto;
   font-size: 8px;
   letter-spacing: 1px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   border: 1px solid var(--line);
   border-radius: 3px;
   padding: 3px;
@@ -194,7 +194,7 @@ nav button.nav-active svg {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 14px;
-  background: #fafbf7;
+  background: var(--surface, #fafbf7);
 }
 .network-box > div {
   font-size: 11px;
@@ -205,7 +205,7 @@ nav button.nav-active svg {
 }
 .network-box small {
   display: block;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 10px;
   margin-top: 7px;
 }
@@ -224,7 +224,7 @@ nav button.nav-active svg {
   border: 0;
   background: none;
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   padding: 20px 2px 24px;
   width: 100%;
 }
@@ -234,7 +234,7 @@ nav button.nav-active svg {
 .built-with {
   font-size: 8px;
   letter-spacing: 1.2px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   border-top: 1px solid var(--line);
   padding-top: 21px;
 }
@@ -243,7 +243,7 @@ nav button.nav-active svg {
   margin-top: 9px;
   font-size: 12px;
   letter-spacing: 0;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-weight: 500;
 }
 .main-shell {
@@ -256,18 +256,18 @@ nav button.nav-active svg {
   align-items: center;
   justify-content: space-between;
   padding: 0 42px;
-  background: #fafbf7;
+  background: var(--surface, #fafbf7);
 }
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 13px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 11px;
 }
 .breadcrumb b {
   font-weight: 500;
-  color: #485042;
+  color: var(--text-primary, #485042);
 }
 .topbar-right {
   display: flex;
@@ -281,7 +281,7 @@ nav button.nav-active svg {
   border: 1px solid var(--line);
   border-radius: 6px;
   background: transparent;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 10px;
   padding: 9px 11px;
 }
@@ -300,13 +300,13 @@ nav button.nav-active svg {
   font-weight: 550;
 }
 .wallet-pill > svg {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-left: 8px;
 }
 .wallet-pill small {
   display: block;
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-top: 3px;
   font-weight: 400;
 }
@@ -319,7 +319,7 @@ nav button.nav-active svg {
   display: grid;
   place-items: center;
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .mobile-menu {
   display: none !important;
@@ -336,7 +336,7 @@ main {
   padding: 9px 12px;
   background: #eceee6;
   border-radius: 5px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 10px;
 }
 .environment-strip > span {
@@ -346,7 +346,7 @@ main {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .environment-strip > p {
   border-left: 1px solid #d9ded0;
@@ -360,7 +360,7 @@ main {
   gap: 5px;
   align-items: center;
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   padding: 0;
 }
 .page-heading {
@@ -375,16 +375,16 @@ main {
   font-size: 9px;
   letter-spacing: 1.4px;
   font-weight: 550;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .page-heading .eyebrow {
   margin-bottom: 15px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .page-heading p {
   font-size: 12px;
   line-height: 1.8;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-top: 14px;
 }
 .heading-aside {
@@ -405,7 +405,7 @@ main {
 }
 .heading-aside > span:not(.eyebrow) {
   display: block;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 10px;
   margin-top: 6px;
 }
@@ -432,7 +432,7 @@ main {
   margin-bottom: 27px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fdfefa;
+  background: var(--surface, #fdfefa);
   padding: 22px 0;
 }
 .metric {
@@ -456,7 +456,7 @@ main {
 }
 .metric small {
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   display: block;
   line-height: 1.6;
 }
@@ -464,7 +464,7 @@ main {
   color: var(--orange);
 }
 .card {
-  background: #fdfefa;
+  background: var(--surface, #fdfefa);
   border: 1px solid var(--line);
   border-radius: 9px;
   padding: 24px;
@@ -498,23 +498,23 @@ main {
   background: currentColor;
 }
 .tag.green {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   background: #edf3e8;
 }
 .tag.neutral {
-  color: #5c6955;
-  background: #f0f2ea;
+  color: var(--text-secondary, #5c6955);
+  background: var(--surface-soft, #f0f2ea);
 }
 .tag.orange {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   background: #fff0e5;
 }
 .tag.amber {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   background: #faf3e3;
 }
 .tag.red {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   background: #faeae5;
 }
 .overview-grid {
@@ -538,7 +538,7 @@ main {
 .pool-description > p {
   font-size: 12px;
   line-height: 1.85;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .chips {
   display: flex;
@@ -551,7 +551,7 @@ main {
   border: 1px solid var(--line);
   padding: 4px 6px;
   border-radius: 4px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .pool-facts {
   display: flex;
@@ -559,7 +559,7 @@ main {
 }
 .pool-facts > div > span {
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   display: block;
 }
 .pool-facts b {
@@ -569,10 +569,10 @@ main {
   font-weight: 550;
 }
 .green-text {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .red-text {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .trade-art {
   width: 150px;
@@ -634,7 +634,7 @@ main {
   left: 12px;
   font-size: 7px;
   letter-spacing: 1px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   line-height: 1.4;
 }
 .pool-card-footer {
@@ -651,7 +651,7 @@ main {
   gap: 6px;
   align-items: center;
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .pool-card-footer .text-link {
   font-size: 10px;
@@ -673,7 +673,7 @@ main {
 .muted-label {
   font-size: 8px;
   letter-spacing: 1px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .allocation-card {
   padding: 22px;
@@ -692,7 +692,7 @@ main {
   flex-shrink: 0;
 }
 .donut > div {
-  background: #fdfefa;
+  background: var(--surface, #fdfefa);
   border-radius: 50%;
   width: 100%;
   height: 100%;
@@ -714,13 +714,13 @@ main {
   font-size: 6px;
   letter-spacing: 1px;
   margin-top: 4px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .legend {
   display: grid;
   gap: 20px;
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .legend > div {
   display: flex;
@@ -749,7 +749,7 @@ main {
 }
 .fine-print {
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   line-height: 1.7;
   margin-top: 17px;
 }
@@ -768,7 +768,7 @@ main {
   align-items: center;
   gap: 8px;
   margin: 21px 0;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .split-symbol > span {
   border: 1px solid #cfd8c1;
@@ -778,11 +778,11 @@ main {
   display: grid;
   place-items: center;
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   background: #f5f7ef;
 }
 .split-symbol > span:last-child {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   border-color: #e2c2a4;
   background: #fff0df;
 }
@@ -793,12 +793,12 @@ main {
 }
 .strategy-card > p {
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   line-height: 1.7;
   margin: 10px 0 21px;
 }
 .strategy-card > .text-link {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 10px;
 }
 .transact-card {
@@ -822,7 +822,7 @@ main {
   border: 0;
   flex: 1;
   padding: 8px 3px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   background: transparent;
   border-radius: 4px;
   font-size: 10px;
@@ -838,7 +838,7 @@ main {
 }
 .amount-form label {
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   display: grid;
   gap: 8px;
 }
@@ -872,14 +872,14 @@ main {
 }
 .amount-input > span {
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .balance {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 8px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-top: -4px;
   gap: 5px;
 }
@@ -918,9 +918,9 @@ main {
   margin-left: 0;
 }
 .secondary {
-  background: #fdfefa;
-  border: 1px solid #dce2d3;
-  color: #5c6955;
+  background: var(--surface, #fdfefa);
+  border: 1px solid var(--line, #dce2d3);
+  color: var(--text-secondary, #5c6955);
 }
 .secondary:hover:not(:disabled) {
   background: #f0f3e9;
@@ -940,11 +940,11 @@ main {
   justify-content: space-between;
   align-items: center;
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   gap: 5px;
 }
 .receipt-rows b {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 9px;
   font-weight: 500;
 }
@@ -962,7 +962,7 @@ main {
   align-items: center;
   border: 0;
   background: none;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-family: monospace;
   font-size: 10px;
   padding: 3px 0;
@@ -973,10 +973,10 @@ main {
   gap: 9px;
   align-items: start;
   padding: 12px;
-  background: #f2f4ed;
-  border: 1px solid #e8ecdf;
+  background: var(--surface-soft, #f2f4ed);
+  border: 1px solid var(--line, #e8ecdf);
   border-radius: 6px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 10px;
   line-height: 1.65;
 }
@@ -986,7 +986,7 @@ main {
 .note.warning {
   background: #fff4e5;
   border-color: #f0dfc5;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .transact-card .note {
   font-size: 9px;
@@ -997,18 +997,18 @@ main {
   justify-content: center;
   gap: 5px;
   font-size: 8px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-top: 22px;
 }
 .process-strip {
   margin: 28px 0 9px;
   padding: 21px 22px;
-  background: #ecefe5;
+  background: var(--surface-soft, #ecefe5);
   border-radius: 7px;
 }
 .process-strip > .eyebrow {
   font-size: 7px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-bottom: 16px;
 }
 .process-strip > div {
@@ -1016,7 +1016,7 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 10px;
 }
 .process-strip > div > span {
@@ -1028,17 +1028,17 @@ main {
   font-size: 9px;
   display: grid;
   place-items: center;
-  background: #f8faf2;
-  border: 1px solid #dee5d0;
+  background: var(--surface-soft, #f8faf2);
+  border: 1px solid var(--line, #dee5d0);
   border-radius: 4px;
   width: 24px;
   height: 24px;
   font-weight: 400;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .process-strip svg {
   width: 15px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 footer {
   margin-top: 32px;
@@ -1047,7 +1047,7 @@ footer {
   justify-content: space-between;
   gap: 10px;
   padding: 19px 0;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 8px;
 }
 footer > span:first-child {
@@ -1095,13 +1095,13 @@ th {
   padding: 0 14px 15px;
   font-size: 9px;
   font-weight: 450;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   border-bottom: 1px solid var(--line);
 }
 td {
   padding: 21px 14px;
   border-bottom: 1px solid var(--line);
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 td:first-child,
 th:first-child {
@@ -1116,13 +1116,13 @@ tr:last-child td {
 }
 td b {
   font-weight: 500;
-  color: #58684b;
+  color: var(--text-primary, #58684b);
   font-size: 11px;
 }
 td small {
   display: block;
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-top: 5px;
 }
 .buyer-cell {
@@ -1135,13 +1135,13 @@ td small {
   place-items: center;
   width: 32px;
   height: 35px;
-  background: #eef1e7;
-  color: #5c6955;
+  background: var(--surface-soft, #eef1e7);
+  color: var(--text-secondary, #5c6955);
   border-radius: 5px;
 }
 .table-footer {
   font-size: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -1150,7 +1150,7 @@ td small {
   line-height: 1.5;
 }
 .evidence {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .space-top {
   margin-top: 23px;
@@ -1168,12 +1168,12 @@ td small {
 }
 .maturity-chart > div > span {
   width: 45px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .maturity-chart > div > div {
   flex: 1;
   height: 16px;
-  background: #f2f4ed;
+  background: var(--surface-soft, #f2f4ed);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -1190,7 +1190,7 @@ td small {
   width: 63px;
   font-size: 10px;
   font-weight: 450;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   text-align: right;
 }
 .explanation {
@@ -1198,10 +1198,10 @@ td small {
   gap: 18px;
   font-size: 12px;
   line-height: 1.9;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .explanation b {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-weight: 500;
 }
 .evidence-detail code,
@@ -1209,11 +1209,11 @@ td small {
   display: block;
   overflow-wrap: anywhere;
   font-size: 11px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .evidence-detail > p {
   font-size: 11px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin: 15px 0;
   line-height: 1.7;
 }
@@ -1221,9 +1221,9 @@ td small {
   display: flex;
   gap: 12px;
   align-items: center;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   padding: 14px 17px;
-  background: #fdfefa;
+  background: var(--surface, #fdfefa);
   border: 1px solid var(--line);
   border-radius: 7px;
 }
@@ -1235,7 +1235,7 @@ td small {
 }
 .expiry-badge b {
   font-size: 11px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-weight: 500;
 }
 .expiry-badge > span {
@@ -1264,13 +1264,13 @@ td small {
   place-items: center;
   border: 1px solid #d4ddc7;
   background: #f0f4e6;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 15px;
 }
 .yield .token-symbol {
   border-color: #ecc8ab;
   background: #fff0df;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .token-card h2 {
   font-size: 21px;
@@ -1279,7 +1279,7 @@ td small {
 .token-card > p {
   margin-top: 11px;
   font-size: 11px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   line-height: 1.85;
   min-height: 60px;
 }
@@ -1289,7 +1289,7 @@ td small {
 .token-balance > span {
   font-size: 8px;
   letter-spacing: 1px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   display: block;
 }
 .token-balance > strong {
@@ -1304,7 +1304,7 @@ td small {
   font-size: 12px;
   font-weight: 400;
   margin-left: 8px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .token-card dl {
   font-size: 9px;
@@ -1321,16 +1321,16 @@ td small {
   gap: 10px;
 }
 .token-card dt {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .token-card dd {
   margin: 0;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .form-hint {
   font-size: 9px;
   line-height: 1.7;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .claim-value {
   padding: 4px 0 25px;
@@ -1344,7 +1344,7 @@ td small {
 .claim-value span {
   display: block;
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-top: 8px;
 }
 .full-width {
@@ -1359,17 +1359,17 @@ td small {
   padding-top: 19px;
   border-top: 1px solid var(--line);
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .unwrap-row b {
   display: block;
   margin-top: 5px;
   font-weight: 500;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .body-copy {
   font-size: 11px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   line-height: 1.85;
   margin-bottom: 20px;
 }
@@ -1381,7 +1381,7 @@ td small {
 .select-label {
   display: grid;
   gap: 9px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 10px;
   margin-bottom: 22px;
 }
@@ -1389,9 +1389,9 @@ select {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 5px;
-  background: #fafcf6;
+  background: var(--surface-input, #fafcf6);
   padding: 11px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 11px;
 }
 .sweep-amount {
@@ -1405,7 +1405,7 @@ select {
   display: block;
   font-family: "DM Sans", sans-serif;
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   letter-spacing: 0;
   margin-top: 8px;
 }
@@ -1413,17 +1413,17 @@ select {
   display: flex;
   align-items: center;
   gap: 17px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 12px;
   margin: 10px 0 24px;
 }
 .mini-flow > span {
   padding: 9px 13px;
-  background: #f0f5e9;
+  background: var(--surface-soft, #f0f5e9);
   border-radius: 5px;
 }
 .danger {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   background: #fff7ef;
   border-color: #efdccd;
 }
@@ -1439,7 +1439,7 @@ select {
 }
 .clock-controls p {
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-top: 7px;
 }
 .clock-controls > div:last-child {
@@ -1452,7 +1452,7 @@ select {
   justify-content: space-between;
   cursor: pointer;
   font-size: 13px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .advanced[open] summary {
   margin-bottom: 25px;
@@ -1467,13 +1467,13 @@ select {
 }
 .control-stack p {
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   line-height: 1.8;
 }
 .role-label {
   text-transform: capitalize;
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .mono {
   font-family: monospace;
@@ -1493,14 +1493,14 @@ select {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   font-size: 12px;
   line-height: 1.5;
 }
 .toast-error {
   background: #fff4ed;
   border-color: #f0d5c3;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .toast > span {
   overflow-wrap: anywhere;
@@ -1513,7 +1513,7 @@ select {
   justify-content: center;
   gap: 20px;
   text-align: center;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .loading-card h1 {
   font-size: 32px;
@@ -1552,7 +1552,7 @@ select {
   max-height: 85vh;
   overflow: auto;
   padding: 35px;
-  background: #fdfefa;
+  background: var(--surface, #fdfefa);
   border: 1px solid #e2e9d8;
   border-radius: 12px;
   box-shadow: 0 25px 80px #172b1726;
@@ -1576,18 +1576,18 @@ select {
   margin: 24px 0;
 }
 .boundary-item > svg {
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   width: 20px;
   margin-top: 3px;
 }
 .boundary-item h3 {
   font-size: 13px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .boundary-item p {
   font-size: 11px;
   line-height: 1.9;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
   margin-top: 6px;
 }
 .contract-list {
@@ -1602,7 +1602,7 @@ select {
   padding: 14px 0;
   border-bottom: 1px solid var(--line);
   font-size: 10px;
-  color: #5c6955;
+  color: var(--text-secondary, #5c6955);
 }
 .mobile-break {
   display: none;
@@ -2288,7 +2288,7 @@ nav button.nav-active {
 .fine-print,
 .body-copy,
 .form-hint {
-  color: #627057;
+  color: var(--text-secondary, #627057);
 }
 .note.warning {
   color: #845c26;

@@ -6,7 +6,9 @@ import { chromium, expect } from "@playwright/test";
 import { keccak256, stringToHex } from "viem";
 const exec = promisify(execFile);
 const session = "pool-public-release";
-const url = "https://pool-omega-five.vercel.app";
+const reportDir = process.env.POOL_VERIFICATION_DIR ?? "docs";
+fs.mkdirSync(`${reportDir}/screenshots`, { recursive: true });
+const url = process.env.POOL_PUBLIC_URL ?? "https://pool-omega-five.vercel.app";
 const cli = async (...args) =>
   (
     await exec("./node_modules/.bin/agent-browser", [
@@ -32,6 +34,33 @@ try {
   });
   const response = await page.goto(url);
   assert.equal(response.status(), 200);
+  await expect(
+    page.getByRole("heading", { name: "Trade credit, made composable." }),
+  ).toBeVisible();
+  await expect(page.locator(".live-card-footer")).toContainText("block", {
+    timeout: 60000,
+  });
+  await page.screenshot({
+    path: `${reportDir}/screenshots/public-home.png`,
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Watch the film", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  assert(
+    await page
+      .locator("dialog video")
+      .evaluate((v) => v.currentSrc.includes("pool-story.mp4")),
+  );
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).not.toBeVisible();
+  checks.push(
+    "New homepage and launch film dialog render; Escape dismisses the film",
+  );
+  await page
+    .getByRole("button", { name: "Explore the pool", exact: true })
+    .click();
   await expect(page.getByRole("heading", { name: /Trade income/ })).toBeVisible(
     { timeout: 60000 },
   );
@@ -54,7 +83,7 @@ try {
     "Fresh visitor loads hosted manifest and live RPC state without a wallet or local storage",
   );
   await page.screenshot({
-    path: "docs/screenshots/public-overview.png",
+    path: `${reportDir}/screenshots/public-overview.png`,
     fullPage: true,
   });
   await page.getByRole("button", { name: "Evidence", exact: true }).click();
@@ -82,7 +111,7 @@ try {
     "Public attestation active; downloaded evidence bytes match all five committed hashes; source links present",
   );
   await page.screenshot({
-    path: "docs/screenshots/public-evidence.png",
+    path: `${reportDir}/screenshots/public-evidence.png`,
     fullPage: true,
   });
   for (const [tab, heading] of [
@@ -93,6 +122,8 @@ try {
     ["Activity", "The transaction trail."],
     ["Setup", "Deploy. Attest. Publish."],
   ]) {
+    if (["Servicing", "Activity", "Setup"].includes(tab))
+      await page.locator(".workspace-menu summary").click();
     await page.getByRole("button", { name: tab, exact: true }).click();
     await expect(
       page.getByRole("heading", { name: heading, exact: true }),
@@ -104,7 +135,23 @@ try {
     page.getByRole("heading", { name: "Release status: ready" }),
   ).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(`${url}/#evidence`);
+  await page.goto(`${url}/#home`);
+  await expect(
+    page.getByRole("heading", { name: "Trade credit, made composable." }),
+  ).toBeVisible();
+  assert(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+    "Mobile home overflow",
+  );
+  await page.screenshot({
+    path: `${reportDir}/screenshots/public-home-mobile.png`,
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Open navigation" }).click();
+  await page.getByRole("button", { name: "Evidence", exact: true }).click();
+  checks.push("Mobile home has no overflow; mobile menu navigates to evidence");
   await expect(
     page.getByRole("heading", { name: "Active onchain attestation" }),
   ).toBeVisible({ timeout: 60000 });
@@ -115,13 +162,13 @@ try {
     "Mobile horizontal overflow",
   );
   await page.screenshot({
-    path: "docs/screenshots/public-mobile.png",
+    path: `${reportDir}/screenshots/public-mobile.png`,
     fullPage: true,
   });
   checks.push("Mobile evidence deep link renders without horizontal overflow");
   assert.deepEqual(errors, []);
   fs.writeFileSync(
-    "docs/public-browser-verification.json",
+    `${reportDir}/public-browser-verification.json`,
     JSON.stringify(
       {
         checkedAt: new Date().toISOString(),
