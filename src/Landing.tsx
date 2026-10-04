@@ -484,6 +484,9 @@ export default function Landing({
         >
           GitHub <ArrowUpRight size={13} />
         </a>
+        <a href="#about">
+          About Pool <ArrowUpRight size={13} />
+        </a>
         <a href="/film/">
           Launch film <ArrowUpRight size={13} />
         </a>

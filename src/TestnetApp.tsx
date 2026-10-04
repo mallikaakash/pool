@@ -10,6 +10,7 @@ import {
   Wallet,
 } from "lucide-react";
 import Landing from "./Landing";
+import About from "./About";
 import { InvestorGuide, Disclosures, WalletUX } from "./InvestorGuide";
 import { CopyButton } from "./App";
 import {
@@ -179,6 +180,7 @@ export default function TestnetApp() {
     const fn = () => {
       setPage(location.hash.slice(1) || "home");
       setMenuOpen(false);
+      window.scrollTo({ top: 0 });
     };
     window.addEventListener("hashchange", fn);
     return () => window.removeEventListener("hashchange", fn);
@@ -343,6 +345,7 @@ export default function TestnetApp() {
       setAccount(a);
       setNotice(`Connected ${a}`);
     });
+  const marketingPage = page === "home" || page === "about";
   const nav = [
     {
       id: "overview",
@@ -394,7 +397,7 @@ export default function TestnetApp() {
   return (
     <WalletUX.Provider value={{ connected: Boolean(account), pending: busy }}>
       <div
-        className={`app-shell testnet-app ${page === "home" ? "home-page" : "workspace-page"} ${account ? "wallet-connected" : "wallet-disconnected"}`}
+        className={`app-shell testnet-app ${marketingPage ? "home-page" : "workspace-page"} ${account ? "wallet-connected" : "wallet-disconnected"}`}
       >
         <a
           className="skip-link"
@@ -425,27 +428,40 @@ export default function TestnetApp() {
               className={`pool-navigation ${menuOpen ? "is-open" : ""}`}
               aria-label="Main navigation"
             >
-              {page === "home" ? (
+              {marketingPage ? (
                 <>
+                  {page === "about" ? (
+                    <button onClick={() => navigate("home")}>Home</button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => {
+                          setMenuOpen(false);
+                          document
+                            .querySelector(".landing-how")
+                            ?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                      >
+                        How it works
+                      </button>
+                      <button
+                        onClick={() => {
+                          setMenuOpen(false);
+                          document
+                            .querySelector(".landing-why")
+                            ?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                      >
+                        Why Pool
+                      </button>
+                    </>
+                  )}
                   <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      document
-                        .querySelector(".landing-how")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
+                    onClick={() => navigate("about")}
+                    aria-current={page === "about" ? "page" : undefined}
+                    className={page === "about" ? "nav-active" : ""}
                   >
-                    How it works
-                  </button>
-                  <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      document
-                        .querySelector(".landing-why")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                  >
-                    Why Pool
+                    About
                   </button>
                   <button onClick={() => navigate("evidence")}>Proof</button>
                 </>
@@ -463,7 +479,7 @@ export default function TestnetApp() {
                   </button>
                 ))
               )}
-              {page !== "home" && (
+              {!marketingPage && (
                 <details className="workspace-menu">
                   <summary
                     className={
@@ -492,15 +508,15 @@ export default function TestnetApp() {
               className="connect-button"
               disabled={busy}
               onClick={
-                page === "home" ? () => navigate("overview") : connectAccount
+                marketingPage ? () => navigate("overview") : connectAccount
               }
             >
-              {page === "home" ? (
+              {marketingPage ? (
                 <ArrowLeftRight size={16} />
               ) : (
                 <Wallet size={16} />
               )}
-              {page === "home"
+              {marketingPage
                 ? "Enter app"
                 : account
                   ? short(account)
@@ -511,7 +527,7 @@ export default function TestnetApp() {
         </header>
         <div className="main-shell">
           <main id="main-content" tabIndex={-1}>
-            {page !== "home" && (
+            {!marketingPage && (
               <div className="app-context-bar">
                 <nav aria-label="Section navigation">
                   {subnav.map(([id, label]) => (
@@ -525,13 +541,16 @@ export default function TestnetApp() {
                     </button>
                   ))}
                 </nav>
-                <Disclosures />
+                <div className="app-context-links">
+                  <a href="#about">About Pool</a>
+                  <Disclosures />
+                </div>
               </div>
             )}
             <div className="environment-strip">
               <span>ARBITRUM SEPOLIA · TESTNET</span>
               <p>Synthetic invoices · tUSD has no monetary value</p>
-              {page !== "home" && (
+              {!marketingPage && (
                 <span className="attestation-strip">
                   {eligibility === true
                     ? "Attestation active"
@@ -566,6 +585,8 @@ export default function TestnetApp() {
             )}
             {page === "home" ? (
               <Landing s={s} eligibility={eligibility} navigate={navigate} />
+            ) : page === "about" ? (
+              <About navigate={navigate} />
             ) : page === "setup" ? (
               <>
                 <section className="page-heading compact">

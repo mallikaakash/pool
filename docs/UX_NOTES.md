@@ -29,3 +29,11 @@ The homepage now explains the payment gap before the protocol components: a busi
 - Mainnet readiness, independent security audit, independent attestor/buyer demand, legal asset rights, and real invoice integrations.
 
 No contract, rate model, wallet role, deployment address or public manifest was changed.
+
+## About page
+
+The public `#about` route explains the financier's capital bottleneck, participant responsibilities, the cash path, and the distinction between borrower collateral and lender shares. A six-step interactive walkthrough accompanies the money-flow diagram. The principal/yield illustration explains whole shares, PT and YT separately, including redemption and liquidity constraints. An educational utilisation slider shows how borrower interest produces lender APR, with constant-balance assumptions stated next to it.
+
+The page distinguishes the implemented single-facility testnet from the planned institution-facing launcher and future portfolio replacement. It includes an original invoice illustration, responsive diagrams, keyboard controls, reduced-motion chapter navigation, and links to public evidence and protocol documentation. About is accessible from the marketing header, homepage footer and app context bar without a connected wallet.
+
+The public browser verifier covers the About deep link and title, all six financing stages, PT/YT explanations, the calculator's zero and maximum endpoints, keyboard disclosure interaction, and overflow at 320, 390 and 768px. The existing release checks continue to cover the live manifest, evidence hashes and financial workspace navigation. This UI pass does not submit transactions or change financial contracts.

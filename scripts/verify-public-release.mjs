@@ -93,6 +93,128 @@ try {
   checks.push(
     "New homepage and launch film dialog render; Escape dismisses the film",
   );
+  await page.getByRole("button", { name: "About", exact: true }).click();
+  await expect(page).toHaveURL(/#about$/);
+  await expect(
+    page.getByRole("heading", {
+      name: "The work is done. Let the capital move.",
+    }),
+  ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.getByRole("heading", {
+      name: "The work is done. Let the capital move.",
+    }),
+  ).toBeVisible();
+  const cycleSteps = page
+    .getByRole("group", { name: "Financing cycle steps" })
+    .getByRole("button");
+  const cycleHeadings = [
+    "Start with work that has already been done.",
+    "Make the financing basis inspectable.",
+    "Cash goes in. A lending position comes out.",
+    "The portfolio unlocks working capital.",
+    "The cash flow has to come home.",
+    "A repeatable financing cycle.",
+  ];
+  for (let i = 0; i < cycleHeadings.length; i++) {
+    await cycleSteps.nth(i).click();
+    await expect(cycleSteps.nth(i)).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#about-step-detail h3")).toHaveText(
+      cycleHeadings[i],
+    );
+  }
+  await page
+    .getByRole("button", { name: "Back to the beginning", exact: true })
+    .click();
+  await expect(cycleSteps.first()).toHaveAttribute("aria-pressed", "true");
+  await page
+    .getByRole("button", { name: "Hold principal", exact: true })
+    .click();
+  await expect(page.locator("#about-position-detail")).toContainText(
+    "PT is not capital protected",
+  );
+  await page
+    .getByRole("button", { name: "Hold future yield", exact: true })
+    .click();
+  await expect(page.locator("#about-position-detail")).toContainText(
+    "YT has no principal redemption right",
+  );
+  await page
+    .getByRole("button", { name: "Keep it whole", exact: true })
+    .click();
+  const borrowing = page.getByRole("slider", { name: /Amount borrowed/ });
+  await expect(page.locator(".about-yield-result > strong")).toHaveText(
+    "7.50%",
+  );
+  await borrowing.focus();
+  await page.keyboard.press("Home");
+  await expect(page.locator(".about-yield-result > strong")).toHaveText(
+    "0.00%",
+  );
+  await page.keyboard.press("End");
+  await expect(page.locator(".about-yield-result > strong")).toHaveText(
+    "9.00%",
+  );
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("ArrowLeft");
+  await expect(page.locator(".about-yield-result > strong")).toHaveText(
+    "7.50%",
+  );
+  const maturity = page
+    .locator(".about-responsibilities summary")
+    .filter({ hasText: "Maturity and cash availability" });
+  await maturity.focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.locator(".about-responsibilities details[open]"),
+  ).toContainText("cash withdrawal depends on available liquidity");
+  await page.keyboard.press("Enter");
+  await page.screenshot({
+    path: `${reportDir}/screenshots/public-about.png`,
+    fullPage: true,
+  });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [320, 390, 768]) {
+    await page.setViewportSize({ width, height: 844 });
+    assert(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+      `About page overflow at ${width}px`,
+    );
+    await page
+      .getByRole("navigation", { name: "About page chapters" })
+      .getByRole("button", { name: /Choose your exposure/ })
+      .click();
+    await expect(
+      page.getByRole("heading", {
+        name: "One position. Two things you can hold.",
+      }),
+    ).toBeInViewport();
+    if (width === 390)
+      await page.screenshot({
+        path: `${reportDir}/screenshots/public-about-mobile.png`,
+        fullPage: true,
+      });
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page
+    .getByRole("button", { name: "Open navigation", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Home", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Open navigation", exact: true }),
+  ).toHaveAttribute("aria-expanded", "false");
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.getByRole("link", { name: "About Pool", exact: true }).click();
+  await expect(page).toHaveTitle(
+    "About Pool — From receivables to lending positions",
+  );
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  checks.push(
+    "About deep link, all six financing steps, PT/YT explanations, keyboard calculator and disclosures work; 320/390/768px layouts have no overflow; reduced-motion chapter navigation and mobile menu work",
+  );
   await page
     .getByRole("button", { name: "Explore the pool", exact: true })
     .click();
@@ -103,6 +225,9 @@ try {
     page.getByRole("button", { name: "Connect MetaMask" }),
   ).toBeVisible();
   await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "About Pool", exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       name: "Your first lending position, step by step.",
