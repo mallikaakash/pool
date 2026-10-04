@@ -29,16 +29,15 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import type { Snapshot, Invoice, Transaction } from "./types";
+import { useWalletUX } from "./InvestorGuide";
 
 type Page = "overview" | "receivables" | "yield" | "servicing" | "activity";
 type Action = (name: string, args?: Record<string, unknown>) => Promise<void>;
 const money = (n: number, d = 0) =>
   new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
     maximumFractionDigits: d,
     minimumFractionDigits: d,
-  }).format(n);
+  }).format(n) + " tUSD";
 const number = (n: number, d = 2) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: d }).format(n);
 const percent = (n: number) => `${(n * 100).toFixed(2)}%`;
@@ -109,13 +108,21 @@ function CardHead({
     </div>
   );
 }
-function CopyButton({ value, label }: { value: string; label?: string }) {
+export function CopyButton({
+  value,
+  label,
+}: {
+  value: string;
+  label?: string;
+}) {
   const [copied, setCopied] = useState(false);
   return (
     <button
       className="copy"
-      title={`Copy ${label ?? "address"}`}
-      aria-label={`Copy ${label ?? "address"}`}
+      title={label?.startsWith("Copy ") ? label : `Copy ${label ?? "address"}`}
+      aria-label={
+        label?.startsWith("Copy ") ? label : `Copy ${label ?? "address"}`
+      }
       onClick={() => {
         navigator.clipboard
           .writeText(value)
@@ -165,6 +172,8 @@ function AmountForm({
   hint?: ReactNode;
 }) {
   const [amount, setAmount] = useState(defaultValue);
+  const walletUX = useWalletUX();
+  const pending = walletUX ? walletUX.pending : busy;
   function submit(e: FormEvent) {
     e.preventDefault();
     void onSubmit(amount);
@@ -211,10 +220,16 @@ function AmountForm({
           (max !== undefined && Number(amount) > max)
         }
       >
-        {busy ? <LoaderCircle size={17} className="spin" /> : null}
-        {button}
+        {pending ? <LoaderCircle size={17} className="spin" /> : null}
+        {pending ? "Awaiting wallet / confirmation…" : button}
         <ArrowUpRight size={17} />
       </button>
+      {walletUX && !walletUX.connected && (
+        <p className="form-hint">
+          Connect your wallet to use this action. Preview balances belong to the
+          example investor.
+        </p>
+      )}
     </form>
   );
 }
@@ -605,6 +620,7 @@ export function Overview({
   busy: boolean;
   navigate: (p: Page) => void;
 }) {
+  const walletUX = useWalletUX();
   const [mode, setMode] = useState<"deposit" | "withdraw">("deposit");
   return (
     <>
@@ -622,7 +638,11 @@ export function Overview({
           </p>
         </div>
         <div className="heading-aside">
-          <span className="eyebrow">YOUR LENDING POSITION</span>
+          <span className="eyebrow">
+            {walletUX && !walletUX.connected
+              ? "EXAMPLE INVESTOR POSITION"
+              : "YOUR LENDING POSITION"}
+          </span>
           <strong>{money(s.investor.value, 2)}</strong>
           <span>{number(s.investor.shares)} pCREDIT shares</span>
           <button className="text-link" onClick={() => navigate("yield")}>
@@ -640,7 +660,11 @@ export function Overview({
         <Metric
           label="INDICATIVE SUPPLY APY"
           value={percent(s.market.supplyAPY)}
-          note="Variable with utilization · not guaranteed"
+          note={
+            s.market.totalBorrow === 0
+              ? "No borrowing yet · idle capital earns no interest"
+              : "Annualized estimate · not earned cash"
+          }
           accent
         />
         <Metric
@@ -654,6 +678,36 @@ export function Overview({
           note="Servicer-valued receivables + cash"
         />
       </section>
+      <details className="yield-explainer">
+        <summary>
+          {s.market.totalBorrow === 0
+            ? "Why is the yield 0%?"
+            : "Where does this yield come from?"}
+        </summary>
+        <p>
+          {s.market.totalBorrow === 0
+            ? "Capital is available, but the business has not borrowed it yet. Interest starts when the operator draws a loan."
+            : "The business pays borrowing interest. That income is shared across all supplied capital, including the idle portion."}
+        </p>
+        <div className="yield-equation">
+          <span>
+            <b>12%</b> fixed demo borrow APR
+          </span>
+          <span>×</span>
+          <span>
+            <b>{percent(s.market.utilization)}</b> capital in use
+          </span>
+          <span>≈</span>
+          <span>
+            <b>{percent(0.12 * s.market.utilization)}</b> indicative lender APR
+          </span>
+        </div>
+        <p>
+          APY is an annualized compounding estimate. Accrued interest is income
+          earned over time; cash you can withdraw also depends on available
+          liquidity. PT/YT separates the claim—it does not create extra income.
+        </p>
+      </details>
       <div className="overview-grid">
         <div className="overview-main">
           <section className="card pool-card">
@@ -857,7 +911,9 @@ export function Overview({
               </b>
             </div>
             <div>
-              <span>Wallet</span>
+              <span>
+                {walletUX && !walletUX.connected ? "Example wallet" : "Wallet"}
+              </span>
               <CopyButton value={s.actors.investor} />
             </div>
           </div>
@@ -869,7 +925,9 @@ export function Overview({
             <Wallet size={14} />
             {s.network.chainId === 31337
               ? "Uses a pre-funded disposable demo wallet"
-              : "Your connected wallet · test dollars only"}
+              : walletUX && !walletUX.connected
+                ? "Read-only preview · test dollars only"
+                : "Your connected wallet · test dollars only"}
           </div>
         </aside>
       </div>
@@ -906,7 +964,10 @@ export function Receivables({ s }: { s: Snapshot }) {
         <div>
           <span className="eyebrow">SG-001 / COLLATERAL PORTFOLIO</span>
           <h1>Behind the yield.</h1>
-          <p>A transparent view of the receivables supporting the facility.</p>
+          <p>
+            Outstanding invoices, collection dates, and recognized credit
+            losses.
+          </p>
         </div>
         <Tag tone="neutral">Synthetic data</Tag>
       </section>
@@ -932,7 +993,44 @@ export function Receivables({ s }: { s: Snapshot }) {
           note="Cumulative servicer write-downs"
         />
       </div>
-      <section className="card">
+      <section className="portfolio-risk" aria-label="Portfolio risk summary">
+        <div>
+          <span>Largest debtor concentration</span>
+          <strong>
+            {percent(
+              Math.max(0, ...s.invoices.map((i) => i.face - i.collected)) /
+                Math.max(s.pool.face, 1),
+            )}
+          </strong>
+          <small>Share of uncollected face value</small>
+        </div>
+        <div>
+          <span>Overdue invoices</span>
+          <strong>
+            {
+              s.invoices.filter(
+                (i) => i.due < s.network.timestamp && i.collected < i.face,
+              ).length
+            }{" "}
+            / {s.invoices.length}
+          </strong>
+          <small>Unpaid after contractual due date</small>
+        </div>
+        <div>
+          <span>Oldest overdue payment</span>
+          <strong>
+            {Math.max(
+              0,
+              ...s.invoices
+                .filter((i) => i.collected < i.face)
+                .map((i) => Math.floor((s.network.timestamp - i.due) / 86400)),
+            )}{" "}
+            days
+          </strong>
+          <small>Overdue amounts are not automatically impaired</small>
+        </div>
+      </section>
+      <section className="card receivables-register">
         <CardHead
           eyebrow="THE UNDERLYING ASSETS"
           title="Receivables register"
@@ -942,12 +1040,12 @@ export function Receivables({ s }: { s: Snapshot }) {
           <table>
             <thead>
               <tr>
-                <th>Debtor / invoice</th>
-                <th>Face value</th>
-                <th>Book value</th>
-                <th>Due date</th>
-                <th>Status</th>
-                <th>Evidence</th>
+                <th scope="col">Debtor / invoice</th>
+                <th scope="col">Uncollected face</th>
+                <th scope="col">Book value</th>
+                <th scope="col">Due date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Evidence</th>
               </tr>
             </thead>
             <tbody>
@@ -966,7 +1064,7 @@ export function Receivables({ s }: { s: Snapshot }) {
                       </div>
                     </div>
                   </td>
-                  <td>{money(i.face)}</td>
+                  <td>{money(i.face - i.collected)}</td>
                   <td>{money(i.value)}</td>
                   <td>{date(i.due)}</td>
                   <td>
@@ -988,7 +1086,17 @@ export function Receivables({ s }: { s: Snapshot }) {
                     <button
                       className="icon-button evidence"
                       aria-label={`Inspect evidence for ${i.buyer}`}
-                      onClick={() => setSelected(i)}
+                      onClick={() => {
+                        setSelected(i);
+                        requestAnimationFrame(() =>
+                          document
+                            .querySelector(".evidence-detail")
+                            ?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "center",
+                            }),
+                        );
+                      }}
                     >
                       <FileCheck2 size={18} />
                     </button>
@@ -1065,7 +1173,28 @@ export function Receivables({ s }: { s: Snapshot }) {
               </button>
             }
           />
-          <code>{selected.evidence}</code>
+          <dl className="invoice-detail-facts">
+            <div>
+              <dt>Debtor</dt>
+              <dd>{selected.buyer}</dd>
+            </div>
+            <div>
+              <dt>Book value</dt>
+              <dd>{money(selected.value)}</dd>
+            </div>
+            <div>
+              <dt>Due date</dt>
+              <dd>{date(selected.due)}</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>{selected.status}</dd>
+            </div>
+          </dl>
+          <details className="utility-details">
+            <summary>Evidence hash</summary>
+            <code>{selected.evidence}</code>
+          </details>
           <p>
             Hash of the exact UTF-8 synthetic evidence document. No live
             TradeTrust, InvoiceNow, registry or bank connection.
@@ -1086,6 +1215,7 @@ export function YieldLab({
   act: Action;
   busy: boolean;
 }) {
+  const walletUX = useWalletUX();
   const [mode, setMode] = useState<"split" | "redeem">("split");
   const days = Math.max(
     0,
@@ -1108,6 +1238,25 @@ export function YieldLab({
           <span>{days}d</span>
         </div>
       </section>
+      <section
+        className="token-explainer"
+        aria-label="Principal and yield explained"
+      >
+        <div>
+          <b>pCREDIT</b>
+          <span>Your share in the lending vault</span>
+        </div>
+        <ArrowRight size={20} />
+        <div>
+          <b>PT · principal claim</b>
+          <span>Redeem into vault shares at maturity; losses still apply</span>
+        </div>
+        <span className="split-plus">+</span>
+        <div>
+          <b>YT · yield claim</b>
+          <span>Receive lending yield generated before expiry</span>
+        </div>
+      </section>
       <div className="yield-grid">
         <section className="card token-card principal">
           <div className="token-top">
@@ -1120,7 +1269,11 @@ export function YieldLab({
             apply.
           </p>
           <div className="token-balance">
-            <span>YOUR PT BALANCE</span>
+            <span>
+              {walletUX && !walletUX.connected
+                ? "EXAMPLE INVESTOR PT"
+                : "YOUR PT BALANCE"}
+            </span>
             <strong>
               {number(s.yield.pt, 4)}
               <small>PT</small>
@@ -1153,7 +1306,11 @@ export function YieldLab({
             checkpoint.
           </p>
           <div className="token-balance">
-            <span>YOUR YT BALANCE</span>
+            <span>
+              {walletUX && !walletUX.connected
+                ? "EXAMPLE INVESTOR YT"
+                : "YOUR YT BALANCE"}
+            </span>
             <strong>
               {number(s.yield.yt, 4)}
               <small>YT</small>
@@ -1292,8 +1449,8 @@ export function YieldLab({
             onSubmit={(amount) => act("transferYT", { amount })}
           />
           <p className="fine-print">
-            A transfer, not a sale. This sprint has no secondary AMM or
-            executable price quotes.
+            A transfer does not pay you. Open Market to sell PT or YT against a
+            funded, signed offer; there is no guaranteed buyer.
           </p>
         </section>
       </div>
@@ -1334,7 +1491,9 @@ export function Servicing({
         <Tag tone="amber">Privileged demo role</Tag>
       </section>
       <Note>
-        These controls use separate disposable servicer and backstop wallets.
+        {s.network.chainId === 421614
+          ? "The configured operator serves as the servicer and finite demo backstop. "
+          : "These controls use separate disposable servicer and backstop wallets. "}
         Real payment confirmation, asset valuation and legal enforcement remain
         offchain dependencies.
       </Note>
@@ -1617,11 +1776,11 @@ export function ActivityPage({ s }: { s: Snapshot }) {
           <table>
             <thead>
               <tr>
-                <th>Action</th>
-                <th>Actor</th>
-                <th>Block</th>
-                <th>Status</th>
-                <th>Transaction</th>
+                <th scope="col">Action</th>
+                <th scope="col">Actor</th>
+                <th scope="col">Block</th>
+                <th scope="col">Status</th>
+                <th scope="col">Transaction</th>
               </tr>
             </thead>
             <tbody>

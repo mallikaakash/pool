@@ -1,9 +1,7 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import {
-  House,
   LayoutDashboard,
   Files,
-  Split,
   ArrowLeftRight,
   ShieldCheck,
   Menu,
@@ -12,6 +10,8 @@ import {
   Wallet,
 } from "lucide-react";
 import Landing from "./Landing";
+import { InvestorGuide, Disclosures, WalletUX } from "./InvestorGuide";
+import { CopyButton } from "./App";
 import {
   hashTypedData,
   verifyTypedData,
@@ -58,6 +58,7 @@ import {
 import config from "../config/arbitrum-sepolia.json";
 import "./testnet.css";
 import "./redesign.css";
+import "./usability.css";
 const storage = "pool.testnet.deployment.v1";
 const short = (s?: string) =>
   s ? `${s.slice(0, 6)}…${s.slice(-4)}` : "Disconnected";
@@ -335,343 +336,529 @@ export default function TestnetApp() {
         "Attestation signed. Send the exported bundle to the operator to publish.",
       );
     });
+  const connectAccount = () =>
+    void work(async () => {
+      const a = await connect();
+      setS(null);
+      setAccount(a);
+      setNotice(`Connected ${a}`);
+    });
   const nav = [
-    { id: "home", label: "Home", icon: House },
-    { id: "overview", label: "Overview", icon: LayoutDashboard },
-    { id: "receivables", label: "Receivables", icon: Files },
-    { id: "yield", label: "Yield lab", icon: Split },
-    { id: "trade", label: "Trade", icon: ArrowLeftRight },
-    { id: "evidence", label: "Evidence", icon: ShieldCheck },
+    {
+      id: "overview",
+      label: "Invest",
+      icon: LayoutDashboard,
+      pages: ["overview", "yield"],
+      description: "Supply capital and manage principal or yield",
+    },
+    {
+      id: "receivables",
+      label: "Portfolio",
+      icon: Files,
+      pages: ["receivables"],
+      description: "Inspect invoices, collections and portfolio risk",
+    },
+    {
+      id: "trade",
+      label: "Market",
+      icon: ArrowLeftRight,
+      pages: ["trade"],
+      description: "Create or accept a funded purchase offer",
+    },
+    {
+      id: "evidence",
+      label: "Proof",
+      icon: ShieldCheck,
+      pages: ["evidence", "activity"],
+      description: "Review signed claims and confirmed transactions",
+    },
   ];
+  const subnav = ["overview", "yield"].includes(page)
+    ? [
+        ["overview", "Overview"],
+        ["yield", "Yield lab"],
+      ]
+    : ["evidence", "activity"].includes(page)
+      ? [
+          ["evidence", "Evidence"],
+          ["activity", "Activity"],
+        ]
+      : page === "receivables"
+        ? [["receivables", "Receivables"]]
+        : page === "trade"
+          ? [["trade", "Trade"]]
+          : [
+              ["servicing", "Servicing"],
+              ["setup", "Setup"],
+            ];
   return (
-    <div
-      className={`app-shell testnet-app ${page === "home" ? "home-page" : "workspace-page"} ${account ? "wallet-connected" : "wallet-disconnected"}`}
-    >
-      <header className="pool-header">
-        <a className="pool-brand" href="#home" aria-label="Pool home">
-          pool<span>.</span>
+    <WalletUX.Provider value={{ connected: Boolean(account), pending: busy }}>
+      <div
+        className={`app-shell testnet-app ${page === "home" ? "home-page" : "workspace-page"} ${account ? "wallet-connected" : "wallet-disconnected"}`}
+      >
+        <a
+          className="skip-link"
+          href="#main-content"
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("main-content")?.focus();
+          }}
+        >
+          Skip to content
         </a>
-        <div className="pool-header-main">
-          <button
-            className="pool-menu-toggle"
-            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-            aria-expanded={menuOpen}
-            aria-controls="pool-navigation"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-          <nav
-            id="pool-navigation"
-            className={`pool-navigation ${menuOpen ? "is-open" : ""}`}
-            aria-label="Main navigation"
-          >
-            {nav.map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                className={page === id ? "nav-active" : ""}
-                aria-current={page === id ? "page" : undefined}
-                onClick={() => navigate(id)}
-              >
-                <Icon size={17} />
-                <span>{label}</span>
-              </button>
-            ))}
-            <details className="workspace-menu">
-              <summary
-                className={
-                  ["servicing", "activity", "setup"].includes(page)
-                    ? "nav-active"
-                    : ""
-                }
-              >
-                Workspace <ChevronDown size={14} />
-              </summary>
-              <div>
-                {["servicing", "activity", "setup"].map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => navigate(p)}
-                    aria-current={page === p ? "page" : undefined}
-                  >
-                    {p[0].toUpperCase() + p.slice(1)}
-                  </button>
-                ))}
-              </div>
-            </details>
-          </nav>
-          <button
-            className="connect-button"
-            disabled={busy}
-            onClick={() =>
-              void work(async () => {
-                const a = await connect();
-                setAccount(a);
-                setNotice(`Connected ${a}`);
-              })
-            }
-          >
-            <Wallet size={16} />
-            {account ? short(account) : "Connect MetaMask"}
-            <span className="button-orb" />
-          </button>
-        </div>
-      </header>
-      <div className="main-shell">
-        <main>
-          <div className="environment-strip">
-            <span>TESTNET SHOWCASE</span>
-            <p>
-              Synthetic receivables · test dollars · Pool-operated protocol
-              instances
-            </p>
-          </div>
-          {notice && (
-            <div className="note" role="status">
-              <span>{notice}</span>
-            </div>
-          )}
-          {error && (
-            <div className="note warning" role="alert">
-              <span>
-                {error}
-                {s ? " Displayed balances may be stale." : ""}
-              </span>
-            </div>
-          )}
-          {page === "home" ? (
-            <Landing s={s} eligibility={eligibility} navigate={navigate} />
-          ) : page === "setup" ? (
-            <>
-              <section className="page-heading compact">
-                <div>
-                  <span className="eyebrow">OPERATOR WORKSPACE</span>
-                  <h1>Deploy. Attest. Publish.</h1>
-                  <p>
-                    Each transaction is reviewed in MetaMask. Completed steps
-                    survive a refresh.
-                  </p>
-                </div>
-              </section>
-              <section className="card">
-                <h2>Release status: {m?.status ?? "not deployed"}</h2>
-                <p>
-                  Operator {config.roles.operator}
-                  <br />
-                  Attestor {config.roles.attestor}
-                  <br />
-                  Investor {config.roles.investor}
-                </p>
-                <div className="release-actions">
-                  <button
-                    className="primary"
-                    disabled={
-                      busy ||
-                      !account ||
-                      account.toLowerCase() !==
-                        config.roles.operator.toLowerCase() ||
-                      m?.status === "ready"
-                    }
-                    onClick={() => void deploy()}
-                  >
-                    {m?.status === "awaiting_attestation"
-                      ? "Publish attestation & finish setup"
-                      : "Prepare / resume deployment"}
-                  </button>
-                  <button
-                    className="secondary"
-                    disabled={
-                      busy ||
-                      !account ||
-                      account.toLowerCase() !==
-                        config.roles.operator.toLowerCase() ||
-                      m?.status !== "ready" ||
-                      Boolean(m?.maturity)
-                    }
-                    onClick={() => void deploy(true)}
-                  >
-                    Prepare real-time maturity demo
-                  </button>
-                  <button
-                    className="secondary"
-                    disabled={!m}
-                    onClick={() => download("pool-deployment.json", json(m))}
-                  >
-                    Export deployment bundle
-                  </button>
-                  <label className="secondary file-label">
-                    Import deployment bundle
-                    <input
-                      type="file"
-                      accept=".json"
-                      disabled={busy}
-                      onChange={(e) => {
-                        if (e.target.files?.[0])
-                          void importBundle(e.target.files[0]);
-                        e.target.value = "";
-                      }}
-                    />
-                  </label>
-                </div>
-                <p>
-                  Prepare contracts first. Export the bundle, have the attestor
-                  import and sign it, then import the signed bundle here and
-                  resume. Export the final manifest for the public frontend.
-                </p>
-                <p>
-                  The operator supplies 375,000 test dollars. The investor
-                  receives 75,000 test dollars; their deposit and the operator’s
-                  borrowing remain visible wallet actions.
-                </p>
-                <ol>
-                  {Object.keys(m?.steps ?? {}).map((label) => (
-                    <li key={label}>{label} ✓</li>
-                  ))}
-                </ol>
-              </section>
-            </>
-          ) : page === "evidence" ? (
-            <Evidence
-              m={m}
-              account={account}
-              valid={eligibility}
-              busy={busy}
-              sign={sign}
-              work={work}
-              notice={setNotice}
-              importBundle={importBundle}
-              persist={persist}
-            />
-          ) : !m || m.status !== "ready" ? (
-            <section className="loading-card">
-              <h1>The testnet release is being prepared.</h1>
-              <p>
-                The public contracts have not been activated in this release
-                yet.
-              </p>
-              <button className="primary" onClick={() => navigate("setup")}>
-                Open deployment workspace
-              </button>
-              <a href="#evidence">Review or sign an attestation</a>
-            </section>
-          ) : !s ? (
-            <section className="loading-card">
-              <h1>Reading the public contracts…</h1>
-              <button
-                className="secondary"
-                onClick={() => setTick((n) => n + 1)}
-              >
-                Retry
-              </button>
-            </section>
-          ) : (
-            <>
-              {eligibility === false && (
-                <div className="note warning">
-                  Attestation expired or revoked. New borrowing is blocked;
-                  repayments remain available.
-                </div>
-              )}
-              {!account && (
-                <div className="note">
-                  Viewing the configured investor’s position. Connect your
-                  wallet to view and transact with your own funds.
-                </div>
-              )}
-              {page === "overview" && (
+        <header className="pool-header">
+          <a className="pool-brand" href="#home" aria-label="Pool home">
+            pool<span>.</span>
+          </a>
+          <div className="pool-header-main">
+            <button
+              className="pool-menu-toggle"
+              aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={menuOpen}
+              aria-controls="pool-navigation"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+            <nav
+              id="pool-navigation"
+              className={`pool-navigation ${menuOpen ? "is-open" : ""}`}
+              aria-label="Main navigation"
+            >
+              {page === "home" ? (
                 <>
                   <button
-                    className="secondary"
-                    disabled={busy || !account}
-                    onClick={() => void act("faucet")}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      document
+                        .querySelector(".landing-how")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }}
                   >
-                    Claim 10,000 test dollars · once per day
+                    How it works
                   </button>
-                  <Overview
-                    s={s}
-                    act={act}
-                    busy={busy || !account}
-                    navigate={navigate}
-                  />
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      document
+                        .querySelector(".landing-why")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                  >
+                    Why Pool
+                  </button>
+                  <button onClick={() => navigate("evidence")}>Proof</button>
                 </>
+              ) : (
+                nav.map(({ id, label, icon: Icon, pages, description }) => (
+                  <button
+                    key={id}
+                    className={pages.includes(page) ? "nav-active" : ""}
+                    title={description}
+                    aria-current={pages.includes(page) ? "page" : undefined}
+                    onClick={() => navigate(id)}
+                  >
+                    <Icon size={17} />
+                    <span>{label}</span>
+                  </button>
+                ))
               )}
-              {page === "receivables" && <Receivables s={s} />}
-              {page === "yield" && (
-                <>
-                  {m.maturity && (
-                    <label className="note">
-                      <input
-                        type="checkbox"
-                        checked={shortSeries}
-                        onChange={(e) => {
-                          setS(null);
-                          setShortSeries(e.target.checked);
-                        }}
-                      />{" "}
-                      View prepared short-maturity series · expires{" "}
-                      {new Date(m.maturity.expiry * 1000).toLocaleString()}
-                    </label>
-                  )}
-                  <YieldLab s={s} act={act} busy={busy || !account} />
-                </>
-              )}
-              {page === "servicing" && (
-                <>
-                  <div className="note">
-                    Operator actions require {short(m.roles.operator)}.
-                    Repayment and liquidations are permissionless. Time advances
-                    naturally on this network.
+              {page !== "home" && (
+                <details className="workspace-menu">
+                  <summary
+                    className={
+                      ["servicing", "activity", "setup"].includes(page)
+                        ? "nav-active"
+                        : ""
+                    }
+                  >
+                    Operator <ChevronDown size={14} />
+                  </summary>
+                  <div>
+                    {["servicing", "setup"].map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => navigate(p)}
+                        aria-current={page === p ? "page" : undefined}
+                      >
+                        {p[0].toUpperCase() + p.slice(1)}
+                      </button>
+                    ))}
                   </div>
-                  <Servicing s={s} act={act} busy={busy || !account} />
-                </>
+                </details>
               )}
-              {page === "trade" && (
-                <Trade
-                  m={m}
-                  account={account}
-                  busy={busy}
-                  work={work}
-                  notice={setNotice}
-                  bid={bid}
-                  setBid={setBid}
-                />
+            </nav>
+            <button
+              className="connect-button"
+              disabled={busy}
+              onClick={
+                page === "home" ? () => navigate("overview") : connectAccount
+              }
+            >
+              {page === "home" ? (
+                <ArrowLeftRight size={16} />
+              ) : (
+                <Wallet size={16} />
               )}
-              {page === "activity" && (
-                <>
-                  <ActivityPage s={s} />
-                  <button
-                    className="secondary"
-                    disabled={busy}
-                    onClick={() =>
-                      void work(async () => {
-                        history.current = await recentEvents(m);
-                        setNotice(
-                          "Loaded recent on-chain events (up to 10,000 blocks).",
-                        );
-                      })
-                    }
-                  >
-                    Refresh public event history
-                  </button>
-                </>
-              )}
-              <footer>
-                <span>
-                  Block {s.network.block} ·{" "}
-                  {new Date(s.network.timestamp * 1000).toLocaleString()}
+              {page === "home"
+                ? "Enter app"
+                : account
+                  ? short(account)
+                  : "Connect MetaMask"}
+              <span className="button-orb" />
+            </button>
+          </div>
+        </header>
+        <div className="main-shell">
+          <main id="main-content" tabIndex={-1}>
+            {page !== "home" && (
+              <div className="app-context-bar">
+                <nav aria-label="Section navigation">
+                  {subnav.map(([id, label]) => (
+                    <button
+                      key={id}
+                      onClick={() => navigate(id)}
+                      aria-current={page === id ? "page" : undefined}
+                      className={page === id ? "nav-active" : ""}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </nav>
+                <Disclosures />
+              </div>
+            )}
+            <div className="environment-strip">
+              <span>ARBITRUM SEPOLIA · TESTNET</span>
+              <p>Synthetic invoices · tUSD has no monetary value</p>
+              {page !== "home" && (
+                <span className="attestation-strip">
+                  {eligibility === true
+                    ? "Attestation active"
+                    : eligibility === false
+                      ? "Attestation inactive"
+                      : "Checking attestation"}{" "}
+                  · Sources published, not audited
                 </span>
+              )}
+            </div>
+            {notice && (
+              <div
+                className={`note transaction-status ${busy ? "is-pending" : ""}`}
+                role="status"
+              >
+                <span>{notice}</span>
+              </div>
+            )}
+            {error && (
+              <div className="note warning" role="alert">
+                <span>
+                  {error}
+                  {s ? " Displayed balances may be stale." : ""}
+                </span>
+              </div>
+            )}
+            {busy && (
+              <p className="wallet-pending" aria-live="polite">
+                Working on your request. Review any wallet prompt, then wait for
+                confirmation.
+              </p>
+            )}
+            {page === "home" ? (
+              <Landing s={s} eligibility={eligibility} navigate={navigate} />
+            ) : page === "setup" ? (
+              <>
+                <section className="page-heading compact">
+                  <div>
+                    <span className="eyebrow">OPERATOR WORKSPACE</span>
+                    <h1>Deploy. Attest. Publish.</h1>
+                    <p>
+                      Each transaction is reviewed in MetaMask. Completed steps
+                      survive a refresh.
+                    </p>
+                  </div>
+                </section>
+                <section className="card">
+                  <h2>Release status: {m?.status ?? "not deployed"}</h2>
+                  <p>
+                    Operator {config.roles.operator}
+                    <br />
+                    Attestor {config.roles.attestor}
+                    <br />
+                    Investor {config.roles.investor}
+                  </p>
+                  <div className="release-actions">
+                    <button
+                      className="primary"
+                      disabled={
+                        busy ||
+                        !account ||
+                        account.toLowerCase() !==
+                          config.roles.operator.toLowerCase() ||
+                        m?.status === "ready"
+                      }
+                      onClick={() => void deploy()}
+                    >
+                      {m?.status === "awaiting_attestation"
+                        ? "Publish attestation & finish setup"
+                        : "Prepare / resume deployment"}
+                    </button>
+                    <button
+                      className="secondary"
+                      disabled={
+                        busy ||
+                        !account ||
+                        account.toLowerCase() !==
+                          config.roles.operator.toLowerCase() ||
+                        m?.status !== "ready" ||
+                        Boolean(m?.maturity)
+                      }
+                      onClick={() => void deploy(true)}
+                    >
+                      Prepare real-time maturity demo
+                    </button>
+                    <button
+                      className="secondary"
+                      disabled={!m}
+                      onClick={() => download("pool-deployment.json", json(m))}
+                    >
+                      Export deployment bundle
+                    </button>
+                    <label className="secondary file-label">
+                      Import deployment bundle
+                      <input
+                        type="file"
+                        accept=".json"
+                        disabled={busy}
+                        onChange={(e) => {
+                          if (e.target.files?.[0])
+                            void importBundle(e.target.files[0]);
+                          e.target.value = "";
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <p>
+                    Prepare contracts first. Export the bundle, have the
+                    attestor import and sign it, then import the signed bundle
+                    here and resume. Export the final manifest for the public
+                    frontend.
+                  </p>
+                  <p>
+                    The operator supplies 375,000 test dollars. The investor
+                    receives 75,000 test dollars; their deposit and the
+                    operator’s borrowing remain visible wallet actions.
+                  </p>
+                  <ol>
+                    {Object.keys(m?.steps ?? {}).map((label) => (
+                      <li key={label}>{label} ✓</li>
+                    ))}
+                  </ol>
+                </section>
+              </>
+            ) : page === "evidence" ? (
+              <Evidence
+                m={m}
+                account={account}
+                valid={eligibility}
+                busy={busy}
+                sign={sign}
+                work={work}
+                notice={setNotice}
+                importBundle={importBundle}
+                persist={persist}
+              />
+            ) : !m || m.status !== "ready" ? (
+              <section className="loading-card">
+                <h1>The testnet release is being prepared.</h1>
+                <p>
+                  The public contracts have not been activated in this release
+                  yet.
+                </p>
+                <button className="primary" onClick={() => navigate("setup")}>
+                  Open deployment workspace
+                </button>
+                <a href="#evidence">Review or sign an attestation</a>
+              </section>
+            ) : !s ? (
+              <section className="loading-card">
+                <h1>Reading the public contracts…</h1>
+                <p>Loading pool balances and your lending position.</p>
+                <div className="loading-skeleton" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </div>
                 <button
                   className="secondary"
                   onClick={() => setTick((n) => n + 1)}
                 >
-                  Refresh
+                  Retry
                 </button>
-              </footer>
-            </>
-          )}
-        </main>
+              </section>
+            ) : (
+              <>
+                {eligibility === false && (
+                  <div className="note warning">
+                    Attestation expired or revoked. New borrowing is blocked;
+                    repayments remain available.
+                  </div>
+                )}
+                {!account && page === "servicing" && (
+                  <div className="note">
+                    Viewing the configured investor’s position. Connect your
+                    wallet to view and transact with your own funds.
+                  </div>
+                )}
+                {page === "overview" && (
+                  <>
+                    <InvestorGuide
+                      s={s}
+                      account={account}
+                      busy={busy}
+                      connect={connectAccount}
+                      faucet={() => void act("faucet")}
+                      navigate={navigate}
+                      deposit={() => {
+                        document
+                          .querySelector<HTMLButtonElement>(
+                            ".overview-grid .segmented button",
+                          )
+                          ?.click();
+                        document
+                          .querySelector(".overview-grid .transact-card")
+                          ?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                          });
+                        document
+                          .querySelector<HTMLInputElement>(
+                            "input[aria-label='Deposit amount']",
+                          )
+                          ?.focus({ preventScroll: true });
+                      }}
+                    />
+                    {account && (
+                      <details className="utility-details">
+                        <summary>Need more test tokens?</summary>
+                        <p>
+                          Claim 10,000 tUSD once per day. Your wallet also needs
+                          Arbitrum Sepolia test ETH for transaction fees.
+                        </p>
+                        <button
+                          className="secondary"
+                          disabled={busy}
+                          onClick={() => void act("faucet")}
+                        >
+                          Claim 10,000 test dollars · once per day
+                        </button>
+                      </details>
+                    )}
+                    <Overview
+                      s={s}
+                      act={act}
+                      busy={busy || !account}
+                      navigate={navigate}
+                    />
+                  </>
+                )}
+                {page === "receivables" && <Receivables s={s} />}
+                {page === "yield" && (
+                  <>
+                    {(!account ||
+                      (s.investor.shares === 0 &&
+                        s.yield.pt === 0 &&
+                        s.yield.yt === 0)) && (
+                      <div className="empty-position">
+                        <h2>Start with a lending position.</h2>
+                        <p>
+                          Deposit test dollars to receive pCREDIT shares. Then
+                          come back to separate principal and future yield.
+                        </p>
+                        <button
+                          className="primary"
+                          onClick={() => navigate("overview")}
+                        >
+                          Start investor walkthrough
+                        </button>
+                      </div>
+                    )}
+                    {m.maturity && (
+                      <label className="note">
+                        <input
+                          type="checkbox"
+                          checked={shortSeries}
+                          onChange={(e) => {
+                            setS(null);
+                            setShortSeries(e.target.checked);
+                          }}
+                        />{" "}
+                        View prepared short-maturity series · expires{" "}
+                        {new Date(m.maturity.expiry * 1000).toLocaleString()}
+                      </label>
+                    )}
+                    <YieldLab s={s} act={act} busy={busy || !account} />
+                  </>
+                )}
+                {page === "servicing" && (
+                  <>
+                    <div className="note">
+                      Operator actions require {short(m.roles.operator)}.
+                      Repayment and liquidations are permissionless. Time
+                      advances naturally on this network.
+                    </div>
+                    <Servicing s={s} act={act} busy={busy || !account} />
+                  </>
+                )}
+                {page === "trade" && (
+                  <Trade
+                    m={m}
+                    account={account}
+                    busy={busy}
+                    work={work}
+                    notice={setNotice}
+                    bid={bid}
+                    setBid={setBid}
+                  />
+                )}
+                {page === "activity" && (
+                  <>
+                    <ActivityPage s={s} />
+                    <button
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() =>
+                        void work(async () => {
+                          history.current = await recentEvents(m);
+                          setNotice(
+                            "Loaded recent on-chain events (up to 10,000 blocks).",
+                          );
+                        })
+                      }
+                    >
+                      Refresh public event history
+                    </button>
+                  </>
+                )}
+                <footer>
+                  <span>
+                    Block {s.network.block} ·{" "}
+                    {new Date(s.network.timestamp * 1000).toLocaleString()}
+                  </span>
+                  <button
+                    className="secondary"
+                    onClick={() => setTick((n) => n + 1)}
+                  >
+                    Refresh
+                  </button>
+                </footer>
+              </>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </WalletUX.Provider>
   );
 }
 function Evidence({
@@ -736,100 +923,149 @@ function Evidence({
                     ? "Signed · publication not yet checked"
                     : "Awaiting attestor signature"}
             </h2>
-            <p>Attestor: {m.roles.attestor}</p>
+            <p className="evidence-lead">
+              A designated signer committed to five synthetic invoices and their
+              recorded values. The registry checks the signer and validity
+              window. It does not verify offchain ownership or customer payment.
+            </p>
+            <div className="evidence-summary">
+              <div>
+                <span>Portfolio at attestation</span>
+                <strong>
+                  {(Number(m.claim.face) / 1e6).toLocaleString()} tUSD
+                </strong>
+                <small>Synthetic contractual face value</small>
+              </div>
+              <div>
+                <span>Recorded book value</span>
+                <strong>
+                  {(Number(m.claim.book) / 1e6).toLocaleString()} tUSD
+                </strong>
+                <small>A servicer estimate, not a market price</small>
+              </div>
+              <div>
+                <span>Claim as of</span>
+                <strong>
+                  {new Date(Number(m.claim.asOf) * 1000).toLocaleDateString()}
+                </strong>
+                <small>
+                  Portfolio snapshot date, not a payment confirmation
+                </small>
+              </div>
+            </div>
+            <p>
+              Attestor: <CopyButton value={m.roles.attestor} />
+            </p>
             <p>
               Valid until:{" "}
               {new Date(Number(m.claim.validUntil) * 1000).toLocaleString()}
             </p>
             <p>
-              Claim UID: <code>{m.uid}</code>
+              Claim reference: <CopyButton value={m.uid ?? ""} />
             </p>
-            <pre>{json(m.claim)}</pre>
-            <div className="release-actions">
-              <button
-                className="primary"
-                disabled={
-                  busy ||
-                  !account ||
-                  account.toLowerCase() !== m.roles.attestor.toLowerCase()
-                }
-                onClick={() => void sign()}
-              >
-                Sign reviewed portfolio
-              </button>
-              <button
-                className="secondary"
-                onClick={() => download("pool-evidence-bundle.json", json(m))}
-              >
-                Download full evidence bundle
-              </button>
-              <button
-                className="secondary danger"
-                disabled={
-                  busy ||
-                  !account ||
-                  account.toLowerCase() !== m.roles.attestor.toLowerCase() ||
-                  valid !== true
-                }
-                onClick={() =>
-                  void work(async () => {
-                    await ensureChain();
-                    const message = {
-                      uid: m.uid!,
-                      deadline: (
-                        (await client.getBlock()).timestamp + 3600n
-                      ).toString(),
-                    };
-                    const signature = await wallet().signTypedData({
-                      account: account!,
-                      domain: claimDomain(
-                        chain.id,
-                        m.addresses.AttestationRegistry,
-                      ),
-                      types: revokeTypes,
-                      primaryType: "Revoke",
-                      message,
-                    });
-                    const value = {
-                      ...m,
-                      revocation: { ...message, signature },
-                    };
-                    persist(value);
-                    download("pool-revocation.json", json(value));
-                    notice(
-                      "Revocation signed. Operator can publish it without funding the attestor wallet.",
-                    );
-                  })
-                }
-              >
-                Sign eligibility revocation
-              </button>
-              {m.revocation && (
+            <details className="utility-details">
+              <summary>Technical attestation details</summary>
+              <p>
+                Claim UID: <code>{m.uid}</code>
+              </p>
+              <pre>{json(m.claim)}</pre>
+            </details>
+            <button
+              className="secondary"
+              onClick={() => download("pool-evidence-bundle.json", json(m))}
+            >
+              Download full evidence bundle
+            </button>
+            <details
+              className="utility-details attestor-tools"
+              open={m.status !== "ready"}
+            >
+              <summary>Attestor & operator actions</summary>
+              <p>
+                Signing endorses this portfolio commitment. Revocation blocks
+                new borrowing and cannot be undone in this demo. Existing
+                repayment remains available.
+              </p>
+              <div className="release-actions">
+                <button
+                  className="primary"
+                  disabled={
+                    busy ||
+                    !account ||
+                    account.toLowerCase() !== m.roles.attestor.toLowerCase()
+                  }
+                  onClick={() => void sign()}
+                >
+                  Sign reviewed portfolio
+                </button>
                 <button
                   className="secondary danger"
-                  disabled={busy || !account || valid !== true}
+                  disabled={
+                    busy ||
+                    !account ||
+                    account.toLowerCase() !== m.roles.attestor.toLowerCase() ||
+                    valid !== true
+                  }
                   onClick={() =>
                     void work(async () => {
-                      const hash = await send(
-                        m,
-                        account!,
-                        "AttestationRegistry",
-                        "revokeSigned",
-                        [
-                          m.revocation!.uid,
-                          BigInt(m.revocation!.deadline),
-                          m.revocation!.signature,
-                        ],
-                        notice,
+                      await ensureChain();
+                      const message = {
+                        uid: m.uid!,
+                        deadline: (
+                          (await client.getBlock()).timestamp + 3600n
+                        ).toString(),
+                      };
+                      const signature = await wallet().signTypedData({
+                        account: account!,
+                        domain: claimDomain(
+                          chain.id,
+                          m.addresses.AttestationRegistry,
+                        ),
+                        types: revokeTypes,
+                        primaryType: "Revoke",
+                        message,
+                      });
+                      const value = {
+                        ...m,
+                        revocation: { ...message, signature },
+                      };
+                      persist(value);
+                      download("pool-revocation.json", json(value));
+                      notice(
+                        "Revocation signed. Operator can publish it without funding the attestor wallet.",
                       );
-                      notice(`Revocation confirmed: ${hash}`);
                     })
                   }
                 >
-                  Publish signed revocation
+                  Sign eligibility revocation
                 </button>
-              )}
-            </div>
+                {m.revocation && (
+                  <button
+                    className="secondary danger"
+                    disabled={busy || !account || valid !== true}
+                    onClick={() =>
+                      void work(async () => {
+                        const hash = await send(
+                          m,
+                          account!,
+                          "AttestationRegistry",
+                          "revokeSigned",
+                          [
+                            m.revocation!.uid,
+                            BigInt(m.revocation!.deadline),
+                            m.revocation!.signature,
+                          ],
+                          notice,
+                        );
+                        notice(`Revocation confirmed: ${hash}`);
+                      })
+                    }
+                  >
+                    Publish signed revocation
+                  </button>
+                )}
+              </div>
+            </details>
             <p>
               All five invoices are synthetic. Signing endorses this exact demo
               portfolio commitment. Review the documents before signing.
@@ -847,7 +1083,7 @@ function Evidence({
                       download(`synthetic-invoice-${i + 1}.json`, document)
                     }
                   >
-                    Download exact bytes
+                    Download invoice record
                   </button>
                 </div>
               ))}
@@ -869,6 +1105,7 @@ function Evidence({
                 >
                   {short(address)} ↗
                 </a>
+                <CopyButton value={address} label={`Copy ${name} address`} />
                 {!name.startsWith("PendleCode") && (
                   <a
                     href={`https://repo.sourcify.dev/421614/${address}`}
@@ -923,6 +1160,7 @@ function Trade({
     [payment, setPayment] = useState("5"),
     [taker, setTaker] = useState(m.roles.investor),
     [imported, setImported] = useState("");
+  const [reviewed, setReviewed] = useState(false);
   const verify = async (packet: BidPacket) => {
     if (
       packet.chainId !== chain.id ||
@@ -961,6 +1199,7 @@ function Trade({
       </section>
       <div className="lower-grid">
         <section className="card">
+          <span className="eyebrow">BUYER · 01 / CREATE AN OFFER</span>
           <h2>Create a bid to buy</h2>
           <p>
             The connected maker funds the purchase. The named seller receives
@@ -968,7 +1207,13 @@ function Trade({
           </p>
           <label>
             Token
-            <select value={token} onChange={(e) => setToken(e.target.value)}>
+            <select
+              value={token}
+              onChange={(e) => {
+                setToken(e.target.value);
+                setReviewed(false);
+              }}
+            >
               <option value="PendleYieldToken">YT</option>
               <option value="PendlePrincipalToken">PT</option>
             </select>
@@ -977,7 +1222,10 @@ function Trade({
             Seller wallet
             <input
               value={taker}
-              onChange={(e) => setTaker(e.target.value as Address)}
+              onChange={(e) => {
+                setTaker(e.target.value as Address);
+                setReviewed(false);
+              }}
             />
           </label>
           <label>
@@ -985,7 +1233,10 @@ function Trade({
             <input
               inputMode="decimal"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                setAmount(e.target.value);
+                setReviewed(false);
+              }}
             />
           </label>
           <label>
@@ -993,12 +1244,60 @@ function Trade({
             <input
               inputMode="decimal"
               value={payment}
-              onChange={(e) => setPayment(e.target.value)}
+              onChange={(e) => {
+                setPayment(e.target.value);
+                setReviewed(false);
+              }}
             />
           </label>
+          {!account && (
+            <p className="form-hint">
+              Connect the buyer’s wallet to create an offer. You can inspect
+              offers without connecting.
+            </p>
+          )}
+          <button
+            className="secondary"
+            disabled={
+              busy ||
+              !account ||
+              !Number.isFinite(Number(amount)) ||
+              Number(amount) <= 0 ||
+              !Number.isFinite(Number(payment)) ||
+              Number(payment) <= 0 ||
+              !/^0x[0-9a-fA-F]{40}$/.test(taker)
+            }
+            onClick={() => setReviewed(true)}
+          >
+            Review offer
+          </button>
+          {reviewed && (
+            <section
+              className="quote-review"
+              aria-label="Review purchase offer"
+            >
+              <h3>You are offering to buy</h3>
+              <p>
+                <strong>
+                  {Number(amount).toLocaleString()}{" "}
+                  {token === "PendleYieldToken" ? "YT" : "PT"}
+                </strong>{" "}
+                for{" "}
+                <strong>{Number(payment).toLocaleString()} tUSD total</strong>
+              </p>
+              <p>
+                Seller: {short(taker)} · offer expires one hour after signing.
+              </p>
+              <p>
+                Your wallet approves the payment allowance and signs the offer.
+                Payment happens only when the named seller fills it. This is
+                your chosen quote, not a market price.
+              </p>
+            </section>
+          )}
           <button
             className="primary"
-            disabled={busy || !account}
+            disabled={busy || !account || !reviewed}
             onClick={() =>
               void work(async () => {
                 if (!account) throw Error("Connect the quote maker.");
@@ -1058,15 +1357,39 @@ function Trade({
           </button>
         </section>
         <section className="card">
+          <span className="eyebrow">SELLER · 02 / REVIEW AND ACCEPT</span>
           <h2>Review and fill a bid</h2>
-          <label>
-            Signed bid JSON
-            <textarea
-              rows={5}
-              value={imported}
-              onChange={(e) => setImported(e.target.value)}
-            />
-          </label>
+          <p>
+            Load a buyer’s signed offer. Review the token quantity, total
+            payment, buyer and expiry before selling.
+          </p>
+          <details className="utility-details">
+            <summary>Advanced: paste signed bid JSON</summary>
+            <label>
+              Signed bid JSON
+              <textarea
+                rows={5}
+                value={imported}
+                onChange={(e) => setImported(e.target.value)}
+              />
+            </label>
+            <button
+              className="secondary"
+              disabled={busy || !imported}
+              onClick={() =>
+                void work(async () => {
+                  const value = JSON.parse(imported);
+                  await verify(value);
+                  setBid(value);
+                  notice(
+                    "Signature verified. Funding, expiry and allowance will be checked when filling.",
+                  );
+                })
+              }
+            >
+              Verify quote
+            </button>
+          </details>
           <label className="secondary file-label">
             Load bid file
             <input
@@ -1074,30 +1397,52 @@ function Trade({
               accept=".json"
               onChange={(e) => {
                 const f = e.target.files?.[0];
-                if (f) void work(async () => setImported(await f.text()));
+                if (f)
+                  void work(async () => {
+                    const raw = await f.text();
+                    const value = JSON.parse(raw);
+                    await verify(value);
+                    setImported(raw);
+                    setBid(value);
+                    notice(
+                      "Signature verified. Review the offer; funding and expiry are checked when filling.",
+                    );
+                  });
                 e.target.value = "";
               }}
             />
           </label>
-          <button
-            className="secondary"
-            disabled={busy || !imported}
-            onClick={() =>
-              void work(async () => {
-                const value = JSON.parse(imported);
-                await verify(value);
-                setBid(value);
-                notice(
-                  "Signature verified. Funding, expiry and allowance will be checked when filling.",
-                );
-              })
-            }
-          >
-            Verify quote
-          </button>
+          {!bid && (
+            <div className="empty-offer">
+              <h3>No offer loaded yet.</h3>
+              <p>
+                Ask a buyer to create an offer, then load the downloaded bid
+                file. There is no public order book or guaranteed liquidity.
+              </p>
+            </div>
+          )}
           {bid && (
             <>
-              <pre>{json(bid.bid)}</pre>
+              <section className="quote-review">
+                <h3>Offer summary</h3>
+                <p>
+                  Buyer: <CopyButton value={bid.bid.maker} />
+                </p>
+                <p>
+                  Seller: <CopyButton value={bid.bid.taker} />
+                </p>
+                <p>
+                  Token:{" "}
+                  {bid.bid.token.toLowerCase() ===
+                  m.addresses.PendleYieldToken.toLowerCase()
+                    ? "YT · future yield"
+                    : "PT · principal exposure"}
+                </p>
+              </section>
+              <details className="utility-details">
+                <summary>Technical signed offer</summary>
+                <pre>{json(bid.bid)}</pre>
+              </details>
               <p>
                 {Number(bid.bid.amount) / 1e6} tokens for{" "}
                 {Number(bid.bid.payment) / 1e6} tUSD total. Expires{" "}

@@ -121,12 +121,34 @@ try {
     if (m.type() === "error") errors.push(m.text());
   });
   const nav = async (label) => {
-    if (["Servicing", "Activity", "Setup"].includes(label))
+    const target = page.getByRole("button", { name: label, exact: true });
+    if (await target.isVisible()) {
+      await target.click();
+      return;
+    }
+    const group = {
+      Overview: "Invest",
+      "Yield lab": "Invest",
+      Receivables: "Portfolio",
+      Trade: "Market",
+      Evidence: "Proof",
+      Activity: "Proof",
+      Servicing: "Operator",
+      Setup: "Operator",
+    }[label];
+    const menu = page.getByRole("button", {
+      name: "Open navigation",
+      exact: true,
+    });
+    if (await menu.isVisible()) await menu.click();
+    if (group === "Operator")
       await page.locator(".workspace-menu summary").click();
-    await page
-      .getByRole("navigation")
-      .getByRole("button", { name: label, exact: true })
-      .click();
+    else
+      await page
+        .getByRole("navigation", { name: "Main navigation", exact: true })
+        .getByRole("button", { name: group, exact: true })
+        .click();
+    await target.click();
   };
   const switchAccount = async (address) => {
     await page.evaluate((a) => window.switchTestAccount(a), address);
@@ -174,6 +196,10 @@ try {
   ).toBeVisible({ timeout: 30000 });
   await page.getByRole("button", { name: "Connect MetaMask" }).click(); // provider starts with operator after reload
   await nav("Trade");
+  await page.getByRole("button", { name: "Review offer", exact: true }).click();
+  await expect(
+    page.getByRole("region", { name: "Review purchase offer" }),
+  ).toBeVisible();
   await click("Approve payment & sign bid", "Bid signed");
   await switchAccount(accounts[2]);
   await click("Sell tokens for test dollars", "Trade confirmed");

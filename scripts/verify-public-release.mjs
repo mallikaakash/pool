@@ -32,6 +32,36 @@ try {
   page.on("console", (msg) => {
     if (msg.type() === "error") errors.push(msg.text());
   });
+  const nav = async (label) => {
+    const target = page.getByRole("button", { name: label, exact: true });
+    if (await target.isVisible()) {
+      await target.click();
+      return;
+    }
+    const group = {
+      Overview: "Invest",
+      "Yield lab": "Invest",
+      Receivables: "Portfolio",
+      Trade: "Market",
+      Evidence: "Proof",
+      Activity: "Proof",
+      Servicing: "Operator",
+      Setup: "Operator",
+    }[label];
+    const menu = page.getByRole("button", {
+      name: "Open navigation",
+      exact: true,
+    });
+    if (await menu.isVisible()) await menu.click();
+    if (group === "Operator")
+      await page.locator(".workspace-menu summary").click();
+    else
+      await page
+        .getByRole("navigation", { name: "Main navigation", exact: true })
+        .getByRole("button", { name: group, exact: true })
+        .click();
+    await target.click();
+  };
   const response = await page.goto(url);
   assert.equal(response.status(), 200);
   await expect(
@@ -40,6 +70,11 @@ try {
   await expect(page.locator(".live-card-footer")).toContainText("block", {
     timeout: 60000,
   });
+  await expect(
+    page.getByRole("heading", {
+      name: "The work is done. The cash is still waiting.",
+    }),
+  ).toBeVisible();
   await page.screenshot({
     path: `${reportDir}/screenshots/public-home.png`,
     fullPage: true,
@@ -68,6 +103,28 @@ try {
     page.getByRole("button", { name: "Connect MetaMask" }),
   ).toBeVisible();
   await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", {
+      name: "Your first lending position, step by step.",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Connect to start", exact: true }),
+  ).toBeEnabled();
+  await expect(
+    page.getByRole("button", { name: "Deposit test dollars", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("button", { name: "Important disclosures", exact: true })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Before you use Pool" }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).not.toBeVisible();
+  checks.push(
+    "Investor checklist is actionable; disconnected deposit is disabled; disclosures work with keyboard",
+  );
   const manifest = await (
     await context.request.get(`${url}/deployment.json`)
   ).json();
@@ -86,10 +143,13 @@ try {
     path: `${reportDir}/screenshots/public-overview.png`,
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Evidence", exact: true }).click();
+  await nav("Evidence");
   await expect(
     page.getByRole("heading", { name: "Active onchain attestation" }),
   ).toBeVisible({ timeout: 60000 });
+  await page
+    .getByText("Technical attestation details", { exact: true })
+    .click();
   await expect(page.getByText(manifest.uid, { exact: true })).toBeVisible();
   await expect(
     page.getByRole("link", { name: /source on Sourcify/ }),
@@ -122,9 +182,7 @@ try {
     ["Activity", "The transaction trail."],
     ["Setup", "Deploy. Attest. Publish."],
   ]) {
-    if (["Servicing", "Activity", "Setup"].includes(tab))
-      await page.locator(".workspace-menu summary").click();
-    await page.getByRole("button", { name: tab, exact: true }).click();
+    await nav(tab);
     await expect(
       page.getByRole("heading", { name: heading, exact: true }),
     ).toBeVisible();
@@ -149,8 +207,7 @@ try {
     path: `${reportDir}/screenshots/public-home-mobile.png`,
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Open navigation" }).click();
-  await page.getByRole("button", { name: "Evidence", exact: true }).click();
+  await nav("Evidence");
   checks.push("Mobile home has no overflow; mobile menu navigates to evidence");
   await expect(
     page.getByRole("heading", { name: "Active onchain attestation" }),

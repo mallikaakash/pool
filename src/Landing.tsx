@@ -84,8 +84,9 @@ export default function Landing({
             <span>made composable.</span>
           </h1>
           <p>
-            Finance a portfolio of receivables. Hold the lending position, or
-            separate principal from future yield. All in one onchain flow.
+            Turn the wait for invoice payment into access to working capital.
+            Fund the lending position, or choose its principal and future yield
+            separately.
           </p>
           <div className="landing-actions">
             <button
@@ -239,6 +240,106 @@ export default function Landing({
         <button onClick={() => navigate("evidence")}>
           See the proof <ArrowUpRight size={16} />
         </button>
+      </section>
+      <section className="landing-why" aria-labelledby="why-title">
+        <div className="section-intro">
+          <span className="section-kicker">WHY POOL EXISTS</span>
+          <h2 id="why-title">
+            The work is done.
+            <br />
+            <span>The cash is still waiting.</span>
+          </h2>
+          <p>
+            A business can deliver today and wait weeks to get paid. Its next
+            job needs cash now. An unpaid invoice is an asset—but it is not yet
+            usable working capital.
+          </p>
+        </div>
+        <div className="problem-grid">
+          <article>
+            <span>FOR THE BUSINESS</span>
+            <h3>Bridge the payment gap.</h3>
+            <p>
+              Borrow against an attested receivables portfolio to release
+              working capital before customers pay.
+            </p>
+          </article>
+          <article>
+            <span>FOR THE LENDER</span>
+            <h3>Choose how to hold credit.</h3>
+            <p>
+              Supply financing with visible portfolio evidence. Keep the full
+              lending position, or separate principal exposure from future
+              income.
+            </p>
+          </article>
+          <article>
+            <span>FOR THE YIELD BUYER</span>
+            <h3>Buy the income window.</h3>
+            <p>
+              A funded buyer can purchase YT from a lender. Income depends on
+              borrowing and repayment; a buyer is never guaranteed.
+            </p>
+          </article>
+        </div>
+        <div className="credit-cycle">
+          <div>
+            <span className="section-kicker">
+              ONE CREDIT CYCLE. MORE WAYS TO PARTICIPATE.
+            </span>
+            <h3>
+              Put receivables to work.
+              <br />
+              Bring repayments back to capital.
+            </h3>
+          </div>
+          <ol>
+            <li>
+              <b>01</b>
+              <span>Lenders supply capital</span>
+            </li>
+            <li>
+              <b>02</b>
+              <span>The business borrows for working capital</span>
+            </li>
+            <li>
+              <b>03</b>
+              <span>Customers settle invoices</span>
+            </li>
+            <li>
+              <b>04</b>
+              <span>Collections repay the loan</span>
+            </li>
+            <li>
+              <b>05</b>
+              <span>
+                Lenders receive principal and interest, subject to liquidity and
+                losses
+              </span>
+            </li>
+          </ol>
+          <p>
+            The income comes from borrower interest, not token creation. Repaid
+            liquidity can finance further borrowing. This demo covers one fixed
+            synthetic portfolio; continuous invoice origination is a future
+            extension.
+          </p>
+        </div>
+        <div className="primitive-note">
+          <span className="section-kicker">THE PROPOSED PRIMITIVE</span>
+          <h3>
+            An attested credit position.
+            <br />
+            <span>Principal and yield you can hold separately.</span>
+          </h3>
+          <p>
+            Pool connects a signed portfolio commitment, a collateralized Morpho
+            loan, and a Pendle-compatible lending position. The financial claim
+            becomes something holders can split and trade. The result is one
+            inspectable credit cycle, with independently held claims on
+            principal and the income window.
+          </p>
+        </div>
       </section>
       <section className="landing-how">
         <div className="section-intro">

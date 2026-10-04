@@ -1,10 +1,11 @@
 {
-  "checkedAt": "2026-10-04T09:53:04.597Z",
+  "checkedAt": "2026-10-04T11:34:35.049Z",
   "url": "http://127.0.0.1:5174",
   "chainId": 421614,
   "scope": "Read-only public deployment: actual RPC, no mock wallet, no intercepted requests, no transactions sent",
   "checks": [
     "New homepage and launch film dialog render; Escape dismisses the film",
+    "Investor checklist is actionable; disconnected deposit is disabled; disclosures work with keyboard",
     "Fresh visitor loads hosted manifest and live RPC state without a wallet or local storage",
     "Public attestation active; downloaded evidence bytes match all five committed hashes; source links present",
     "Receivables renders without errors",
