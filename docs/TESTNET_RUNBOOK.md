@@ -38,11 +38,13 @@ The checked-in release manifest makes the same pool discoverable to every visito
 
 ## Rehearse the healthy lifecycle
 
+Use [DEMO_SCRIPT.md](DEMO_SCRIPT.md) for the current screen-by-screen narration. The amounts below are rehearsal inputs: check existing balances and debt before repeating completed actions. The attestor wallet can also act as the secondary buyer; fund it with tUSD and test ETH first.
+
 1. **Investor / Overview:** deposit 25,000 tUSD. Approval and deposit are separate wallet confirmations.
 2. **Operator / Servicing / Additional facility controls:** draw 250,000 tUSD. The attestation must still be active.
 3. **Investor / Yield lab:** split 5,000 lender shares into PT/YT. Execution has a 0.5% minimum-output tolerance based on a fresh simulation.
-4. **Operator / Trade:** create a bid for 1,000 YT with a total payment of 5 tUSD, naming the investor as seller. Approve the payment and sign the bid. This is a deliberately selected demo quote, not an externally discovered market price.
-5. **Investor / Trade:** import the signed bid (or retain it in the same browser), review its exact amounts and fill it. The atomic transaction transfers YT to the operator and tUSD to the investor. Bids expire after one hour and may be cancelled by their maker.
+4. **Attestor, acting as buyer / Market:** create a bid for 1,000 YT with a total payment of 1 tUSD, naming the investor as seller. Approve the payment and sign the bid. This is a deliberately selected demo quote, not an externally discovered market price.
+5. **Investor / Market:** import the signed bid (or retain it in the same browser), review its exact amounts and fill it. The atomic transaction transfers YT to the buyer and tUSD to the investor. The investor retains its PT; the buyer role is separate from attestation. Bids expire after one hour and may be cancelled by their maker.
 6. **Operator / Servicing:** collect 1,000 tUSD on SG-001, then sweep the received cash into debt repayment. Inspect changed NAV, pool cash and debt.
 7. **Evidence / Activity:** inspect the registry, exact evidence bytes, confirmed receipts and public explorer links. Refresh public event history when showing transactions from another browser. This history view fetches at most the latest 10,000 blocks plus release setup receipts.
 
