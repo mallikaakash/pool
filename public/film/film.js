@@ -215,7 +215,6 @@
     const timeline = mode === "hero" ? heroStarts : starts;
     const index = timeline.findLastIndex((t) => current >= t);
     const local = current - timeline[index];
-    const sceneLength = (timeline[index + 1] ?? duration()) - timeline[index];
     stage.classList.toggle("hero", mode === "hero");
     stage.classList.toggle("is-dark", [0, 1, 6, 9].includes(index));
     scenes.forEach((scene, i) => {
@@ -233,8 +232,6 @@
     choreography(index, reduced.matches ? Math.max(local, 6) : local);
     stage.setAttribute("aria-label", `${names[index]}. Pool launch film.`);
     setText("chapter-label", names[index].toUpperCase());
-    document.querySelector("#cut-line").style.transform =
-      `scaleX(${clamp(local / sceneLength)})`;
     [...chapters.children].forEach((el, i) =>
       el.setAttribute("aria-current", String(i === index)),
     );

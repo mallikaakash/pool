@@ -230,19 +230,6 @@ p {
 .is-dark #film-ticks i.on {
   background: var(--lime);
 }
-#cut-line {
-  position: absolute;
-  top: 111px;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  background: var(--orange);
-  transform-origin: left;
-  z-index: 6;
-}
-.is-dark #cut-line {
-  background: var(--lime);
-}
 .hook-copy {
   position: absolute;
   top: 130px;
