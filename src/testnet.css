@@ -1,0 +1,105 @@
+.testnet-app .note {
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+.testnet-app .card > p {
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.testnet-app .card pre {
+  background: #f4f4ee;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 350px;
+  overflow: auto;
+}
+.testnet-app .card label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+  font-size: 13px;
+}
+.testnet-app .card input,
+.testnet-app .card textarea,
+.testnet-app .card select {
+  padding: 12px;
+  border: 1px solid #ccd2c8;
+  border-radius: 8px;
+  background: white;
+  font: inherit;
+  max-width: 100%;
+}
+.testnet-app .release-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.testnet-app .file-label {
+  cursor: pointer;
+  position: relative;
+}
+.testnet-app .file-label input {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  cursor: pointer;
+}
+.testnet-app .card li {
+  margin: 8px 0;
+  font-size: 13px;
+}
+.testnet-app .card button {
+  margin: 4px 4px 4px 0;
+}
+.testnet-app code {
+  overflow-wrap: anywhere;
+}
+.testnet-app .loading-card a {
+  display: block;
+  margin: 20px;
+}
+@media (max-width: 900px) {
+  .testnet-app .sidebar {
+    position: static;
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: none;
+    padding: 16px;
+  }
+  .testnet-app {
+    display: block;
+  }
+  .testnet-app .sidebar nav {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .testnet-app .sidebar nav button {
+    width: auto;
+  }
+  .testnet-app .sidebar-bottom,
+  .testnet-app .workspace-label {
+    display: none;
+  }
+  .testnet-app .main-shell {
+    margin-left: 0;
+  }
+  .testnet-app .topbar {
+    padding: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .testnet-app .contract-list > div {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .testnet-app .topbar-right {
+    gap: 8px;
+  }
+}

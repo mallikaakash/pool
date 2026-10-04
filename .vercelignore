@@ -1,0 +1,9 @@
+.git
+.runtime
+node_modules
+dist
+verification
+artifacts
+docs/screenshots
+test-results
+.env*

@@ -208,3 +208,289 @@ test("closing repaid facility unlocks residual collateral and prevents reborrowi
   );
   assert.equal(await d.read("ReceivablePool", "totalSupply"), units(484000));
 });
+
+// Public-release guarantees, exercised against the same deployed protocol stack.
+import {
+  claimTypes,
+  claimDomain,
+  bidTypes,
+  bidDomain,
+  portfolioRoot,
+} from "../src/lib/claims.mjs";
+import { hashTypedData, maxUint256 } from "viem";
+
+test("attestation binds signer, chain, registry, portfolio and values; nonce cannot replay", async () => {
+  assert.equal(
+    d.uid,
+    hashTypedData({
+      domain: claimDomain(31337, d.addresses.AttestationRegistry),
+      types: claimTypes,
+      primaryType: "Claim",
+      message: d.claim,
+    }),
+  );
+  assert.equal(await d.read("AttestationRegistry", "isValid", [d.uid]), true);
+  await assert.rejects(
+    d.write("AttestationRegistry", "publish", [d.claim, d.signature]),
+  );
+  const c = { ...d.claim, nonce: 2n };
+  const sign = (wallet, domain, message = c) =>
+    wallet.signTypedData({
+      domain,
+      types: claimTypes,
+      primaryType: "Claim",
+      message,
+    });
+  for (const signature of [
+    await sign(
+      d.wallets.investor,
+      claimDomain(31337, d.addresses.AttestationRegistry),
+    ),
+    await sign(
+      d.wallets.attestor,
+      claimDomain(421614, d.addresses.AttestationRegistry),
+    ),
+    await sign(
+      d.wallets.attestor,
+      claimDomain(31337, d.addresses.ReceivablePool),
+    ),
+  ])
+    await assert.rejects(
+      d.write("AttestationRegistry", "publish", [c, signature]),
+    );
+  const signature = await sign(
+    d.wallets.attestor,
+    claimDomain(31337, d.addresses.AttestationRegistry),
+  );
+  await assert.rejects(
+    d.write("AttestationRegistry", "publish", [
+      { ...c, book: c.book - 1n },
+      signature,
+    ]),
+  );
+  await d.write("AttestationRegistry", "publish", [c, signature]);
+  await assert.rejects(
+    d.write("ReceivablePool", "admit", [d.uid, d.evidence.entries]),
+  );
+});
+
+test("revoked and expired eligibility blocks borrowing, preserves actual repayment and cash collection", async () => {
+  await assert.rejects(
+    d.write("AttestationRegistry", "revoke", [d.uid], "investor"),
+  );
+  await d.write("AttestationRegistry", "revoke", [d.uid], "attestor");
+  await assert.rejects(d.action("borrow", { amount: 1 }));
+  await d.action("repay", { amount: 1000 });
+  await d.action("collect", { id: 0, amount: 1000 });
+  await d.action("sweep");
+  assert.ok((await d.read("ReceivableOracle", "price")) > 0n);
+});
+
+test("expiry prevents borrowing without breaking oracle or permissionless debt repayment", async () => {
+  await d.client.request({
+    method: "evm_setNextBlockTimestamp",
+    params: [Number(d.claim.validUntil)],
+  });
+  await d.client.request({ method: "evm_mine" });
+  assert.equal(await d.read("AttestationRegistry", "isValid", [d.uid]), false);
+  await assert.rejects(d.action("borrow", { amount: 1 }));
+  await d.action("repay", { amount: 1000 });
+  assert.ok((await d.read("ReceivableOracle", "price")) > 0n);
+});
+
+test("portfolio admission rejects different pool, bad commitments and duplicate IDs before minting", async () => {
+  const a = JSON.parse(
+    (await import("node:fs")).readFileSync(
+      "artifacts/ReceivablePool.json",
+      "utf8",
+    ),
+  );
+  const hash = await d.wallets.servicer.deployContract({
+    abi: a.abi,
+    bytecode: a.bytecode,
+    args: [
+      d.addresses.TestDollar,
+      d.actors.servicer,
+      d.addresses.AttestationRegistry,
+    ],
+  });
+  const receipt = await d.client.waitForTransactionReceipt({ hash });
+  const pool = receipt.contractAddress;
+  const write = async (uid, entries) => {
+    const { request } = await d.client.simulateContract({
+      address: pool,
+      abi: a.abi,
+      functionName: "admit",
+      args: [uid, entries],
+      account: d.actors.servicer,
+    });
+    return d.wallets.servicer.writeContract(request);
+  };
+  await assert.rejects(write(d.uid, d.evidence.entries));
+  let nonce = 5n;
+  for (const entries of [
+    d.evidence.entries,
+    [d.evidence.entries[0], d.evidence.entries[0]],
+  ]) {
+    const c = {
+      ...d.claim,
+      pool,
+      root: portfolioRoot(entries),
+      face: entries.reduce((s, e) => s + e.face, 0n),
+      book: entries.reduce((s, e) => s + e.book, 0n),
+      nonce: nonce++,
+    };
+    const signature = await d.wallets.attestor.signTypedData({
+      domain: claimDomain(31337, d.addresses.AttestationRegistry),
+      types: claimTypes,
+      primaryType: "Claim",
+      message: c,
+    });
+    await d.write("AttestationRegistry", "publish", [c, signature]);
+    const uid = await d.read("AttestationRegistry", "digest", [c]);
+    if (entries.length === 5)
+      await assert.rejects(
+        write(uid, [{ ...entries[0], book: 1n }, ...entries.slice(1)]),
+      );
+    else await assert.rejects(write(uid, entries));
+  }
+  assert.equal(
+    await d.client.readContract({
+      address: pool,
+      abi: a.abi,
+      functionName: "totalSupply",
+    }),
+    0n,
+  );
+});
+
+async function bid(nonce = 1n) {
+  await d.action("split", { amount: 5000 });
+  await d.write(
+    "TestDollar",
+    "approve",
+    [d.addresses.QuoteMarket, maxUint256],
+    "trader",
+  );
+  await d.write(
+    "PendleYieldToken",
+    "approve",
+    [d.addresses.QuoteMarket, maxUint256],
+    "investor",
+  );
+  const message = {
+    maker: d.actors.trader,
+    taker: d.actors.investor,
+    token: d.addresses.PendleYieldToken,
+    amount: units(1000),
+    payment: units(5),
+    deadline: (await d.client.getBlock()).timestamp + 3600n,
+    nonce,
+  };
+  const signature = await d.wallets.trader.signTypedData({
+    domain: bidDomain(31337, d.addresses.QuoteMarket),
+    types: bidTypes,
+    primaryType: "Bid",
+    message,
+  });
+  return [message, signature];
+}
+test("signed YT bid settles actual currency atomically, with replay/taker/tampering protection", async () => {
+  const [b, s] = await bid();
+  await assert.rejects(d.write("QuoteMarket", "fill", [b, s], "servicer"));
+  await assert.rejects(
+    d.write(
+      "QuoteMarket",
+      "fill",
+      [{ ...b, payment: units(50) }, s],
+      "investor",
+    ),
+  );
+  const cash = await d.read("TestDollar", "balanceOf", [d.actors.investor]);
+  await d.write("QuoteMarket", "fill", [b, s], "investor");
+  assert.equal(
+    await d.read("TestDollar", "balanceOf", [d.actors.investor]),
+    cash + units(5),
+  );
+  assert.equal(
+    await d.read("PendleYieldToken", "balanceOf", [d.actors.trader]),
+    units(1000),
+  );
+  await assert.rejects(d.write("QuoteMarket", "fill", [b, s], "investor"));
+});
+test("cancelled, expired and unfunded bids cannot move the seller tokens", async () => {
+  const [b, s] = await bid();
+  await d.write(
+    "TestDollar",
+    "approve",
+    [d.addresses.QuoteMarket, 0n],
+    "trader",
+  );
+  const before = await d.read("PendleYieldToken", "balanceOf", [
+    d.actors.investor,
+  ]);
+  await assert.rejects(d.write("QuoteMarket", "fill", [b, s], "investor"));
+  assert.equal(
+    await d.read("PendleYieldToken", "balanceOf", [d.actors.investor]),
+    before,
+  );
+  assert.equal(
+    await d.read("QuoteMarket", "usedNonce", [b.maker, b.nonce]),
+    false,
+  );
+  await d.write(
+    "TestDollar",
+    "approve",
+    [d.addresses.QuoteMarket, maxUint256],
+    "trader",
+  );
+  await d.write("QuoteMarket", "cancel", [b.nonce], "trader");
+  await assert.rejects(d.write("QuoteMarket", "fill", [b, s], "investor"));
+  const [b2, s2] = await bid(2n);
+  await d.client.request({
+    method: "evm_setNextBlockTimestamp",
+    params: [Number(b2.deadline + 1n)],
+  });
+  await d.client.request({ method: "evm_mine" });
+  await assert.rejects(d.write("QuoteMarket", "fill", [b2, s2], "investor"));
+});
+
+test("sponsored revocation authenticates the attestor, deadline and UID, and rejects replay", async () => {
+  const types = {
+    Revoke: [
+      { name: "uid", type: "bytes32" },
+      { name: "deadline", type: "uint256" },
+    ],
+  };
+  const message = {
+    uid: d.uid,
+    deadline: (await d.client.getBlock()).timestamp + 3600n,
+  };
+  const signature = await d.wallets.attestor.signTypedData({
+    domain: claimDomain(31337, d.addresses.AttestationRegistry),
+    types,
+    primaryType: "Revoke",
+    message,
+  });
+  await assert.rejects(
+    d.write("AttestationRegistry", "revokeSigned", [
+      d.uid,
+      message.deadline + 1n,
+      signature,
+    ]),
+  );
+  await d.write(
+    "AttestationRegistry",
+    "revokeSigned",
+    [d.uid, message.deadline, signature],
+    "servicer",
+  );
+  assert.equal(await d.read("AttestationRegistry", "isValid", [d.uid]), false);
+  await assert.rejects(
+    d.write("AttestationRegistry", "revokeSigned", [
+      d.uid,
+      message.deadline,
+      signature,
+    ]),
+  );
+});

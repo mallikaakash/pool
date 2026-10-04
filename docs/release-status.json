@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-04T05:15:47.372Z",
+  "frontend": "https://pool-omega-five.vercel.app",
+  "deploymentId": "dpl_8U7GNAHnUmLkWtUDYbhFqKuBVBdA",
+  "frontendStatus": "READY",
+  "chainId": 421614,
+  "contractsStatus": "awaiting_owner_wallet_signatures",
+  "protocolTests": 18,
+  "browserRehearsal": "passed on disposable chain via injected test wallet",
+  "verificationInputs": "47 artifacts reproduced exactly; public source verification pending deployment",
+  "walletBalancesETH": {
+    "operator": "0.148998833039156",
+    "attestor": "0.001",
+    "investor": "0"
+  },
+  "remaining": [
+    "operator MetaMask deployment confirmations",
+    "attestor typed-data signature and operator publication",
+    "publish final manifest",
+    "public source verification",
+    "actual public-chain rehearsal and final recording"
+  ]
+}

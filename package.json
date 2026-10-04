@@ -11,7 +11,13 @@
     "check": "npm test && npm run build",
     "test:browser": "node scripts/verify-browser.mjs",
     "pretest": "npm run compile",
-    "format": "prettier --write src scripts tests docs *.json *.ts *.html README.md"
+    "format": "prettier --write src scripts tests docs *.json *.ts *.html README.md",
+    "build:release": "npm run build",
+    "dev:testnet": "VITE_APP_MODE=testnet vite --port 5174",
+    "prebuild": "npm run compile && node scripts/export-web.mjs",
+    "test:browser:testnet": "node scripts/verify-testnet-browser.mjs",
+    "verify:source": "node scripts/verify-source.mjs",
+    "publish:manifest": "node scripts/publish-manifest.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.51.0",
@@ -31,7 +37,7 @@
     "agent-browser": "^0.38.2",
     "prettier": "^3.9.9",
     "solc": "0.8.28",
-    "solc-morpho": "npm:solc@^0.8.19",
+    "solc-morpho": "npm:solc@0.8.19",
     "typescript": "^7.0.2",
     "vite": "^8.3.2"
   },

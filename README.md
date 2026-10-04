@@ -4,6 +4,19 @@
 
 ![Pool overview](docs/screenshots/overview.png)
 
+## Public testnet release
+
+The Arbitrum Sepolia frontend, wallet deployment workflow, signed portfolio admission, revocation and fixed-size PT/YT bid market are implemented. Public contract addresses remain **not deployed** until the owner completes the MetaMask workflow; do not interpret the hosted setup page as an activated pool.
+
+Use [TESTNET_RUNBOOK.md](docs/TESTNET_RUNBOOK.md) for wallet deployment, signing, source verification, publishing the shared manifest and recording the video. [TESTNET_RELEASE.md](docs/TESTNET_RELEASE.md) records the release scope. The original local demo instructions below remain available for accelerated scenarios.
+
+```sh
+npm run build:release  # reproducible compile, browser artifacts and public frontend
+npm run dev:testnet   # wallet-connected frontend on port 5174
+```
+
+The public application holds no signing keys or privileged transaction API. Attestations bind the pool, evidence commitment, currency, values, validity and nonce. The pool rejects unapproved or duplicate admission; expired/revoked eligibility stops borrowing while preserving repayment. Signed bids settle actual test-dollar payments atomically. All external receivables remain synthetic.
+
 ## Run it
 
 Requires Node.js 22.12+ and Foundry's `anvil` on your PATH. No wallet, private key, external RPC, database or paid API is required.
@@ -90,7 +103,7 @@ Both token families use six decimals. The collateral oracle returns `NAV × 10^3
 
 **This is a local prototype, not an Arbitrum or Robinhood deployment.** It does not connect to a production Morpho deployment, the Pendle frontend or a secondary AMM. There are no executable secondary-market prices. The local market demonstrates mechanics, not external integration approval or liquidity.
 
-Every buyer, invoice, assignment, valuation and payment input is synthetic. Evidence hashes identify fixtures, not verified documents. InvoiceNow, TradeTrust, TFR, banks, SPVs and registries are not connected. The interface's Singapore framing does not imply affiliations or access to those systems.
+Every buyer, invoice, assignment, valuation and payment input is synthetic. Evidence hashes commit to exact synthetic documents; designated-attestor signatures identify claims without independently proving those documents true. InvoiceNow, TradeTrust, TFR, banks, SPVs and registries are not connected. The interface's Singapore framing does not imply affiliations or access to those systems.
 
 PT is **not capital protected**. YT is not a first-loss tranche. Book NAV is not a liquidation bid. The backstop is finite, not insurance. Pendle maturity does not force debtor payment or make borrowed cash instantly available. Standard Pendle accounting snapshots the index at its first post-expiry update; it does not backdate the lending vault's exchange rate to the precise maturity second.
 

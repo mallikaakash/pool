@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-04T05:10:05.469Z",
+  "scope": "Public frontend and wallet adapter against a disposable chain 421614; NOT a public deployment or real MetaMask extension test",
+  "checks": [
+    "resumable deployment UI",
+    "separate attestor signature",
+    "publish and admission",
+    "wallet role switching",
+    "deposit",
+    "borrow",
+    "PT/YT mint",
+    "refresh",
+    "funded YT sale",
+    "onchain attestation inspection",
+    "collection and repayment",
+    "mobile",
+    "no time travel controls",
+    "zero browser errors"
+  ],
+  "transactions": 25,
+  "errors": []
+}

@@ -8,3 +8,8 @@ artifacts/
 coverage/
 *.tsbuildinfo
 test-results/
+.vercel
+verification/
+src/generated/
+public/setup/
+.vercel/

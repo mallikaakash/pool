@@ -1,0 +1,14 @@
+{
+  "chainId": 421614,
+  "network": "Arbitrum Sepolia",
+  "rpcUrl": "https://sepolia-rollup.arbitrum.io/rpc",
+  "explorerUrl": "https://sepolia.arbiscan.io",
+  "roles": {
+    "operator": "0xEb3356a0b57e7dcCb9341fD40545a5dCb6239267",
+    "attestor": "0x45b16B03CA58Ac4E02e1522c8457F2BfEe4F8790",
+    "investor": "0x68C6e946d815E9df17548f822379ADD9D9439530"
+  },
+  "deploymentStatus": "not_deployed",
+  "contracts": {},
+  "note": "Public addresses only. Role assignment for the upcoming wallet-connected deployment; the existing local demo still uses disposable Anvil accounts."
+}

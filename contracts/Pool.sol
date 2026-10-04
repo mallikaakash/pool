@@ -9,12 +9,14 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.
 import {IMorpho, MarketParams, Market, Id} from "@morpho-org/morpho-blue/src/interfaces/IMorpho.sol";
 import {MorphoBalancesLib} from "@morpho-org/morpho-blue/src/libraries/periphery/MorphoBalancesLib.sol";
 import {MarketParamsLib} from "@morpho-org/morpho-blue/src/libraries/MarketParamsLib.sol";
+import {AttestationRegistry} from "./AttestationRegistry.sol";
 
 /// @notice Disposable local test currency. Never represents issuer-backed USDG.
 contract TestDollar is ERC20 {
     address public immutable faucet;
 
-    constructor() ERC20("Test Dollar - local only", "tUSD") {
+    mapping(address => uint256) public nextClaim;
+    constructor() ERC20("Pool Test Dollar - no monetary value", "tUSD") {
         faucet = msg.sender;
     }
 
@@ -25,6 +27,12 @@ contract TestDollar is ERC20 {
     function mint(address to, uint256 amount) external {
         require(msg.sender == faucet, "faucet only");
         _mint(to, amount);
+    }
+
+    function claim() external {
+        require(block.timestamp >= nextClaim[msg.sender], "faucet cooldown");
+        nextClaim[msg.sender] = block.timestamp + 1 days;
+        _mint(msg.sender, 10_000e6);
     }
 }
 
@@ -59,6 +67,11 @@ contract ReceivablePool is ERC20, ReentrancyGuard {
     Invoice[] public invoices;
     IERC20 public immutable cash;
     address public immutable servicer;
+    AttestationRegistry public immutable registry;
+    bytes32 public attestationUID;
+    struct InvoiceInput { bytes32 id; uint256 face; uint256 book; uint256 due; bytes32 evidence; }
+    mapping(bytes32 => bool) public admittedId;
+    event PortfolioAdmitted(bytes32 indexed uid, bytes32 indexed root, uint256 book);
     IMorpho public morpho;
     MarketParams public params;
     bool public activated;
@@ -76,25 +89,33 @@ contract ReceivablePool is ERC20, ReentrancyGuard {
         _;
     }
 
-    constructor(IERC20 dollar, address operator) ERC20("Pool receivables - synthetic", "rINV") {
+    constructor(IERC20 dollar, address operator, AttestationRegistry attestations) ERC20("Pool receivables - synthetic", "rINV") {
+        require(address(dollar) != address(0) && operator != address(0) && address(attestations) != address(0), "zero address");
         cash = dollar;
         servicer = operator;
-        uint256[5] memory faces = [uint256(120_000e6), 100_000e6, 90_000e6, 110_000e6, 80_000e6];
-        for (uint256 i; i < 5; ++i) {
-            uint256 book = faces[i] * 97 / 100;
-            invoices.push(
-                Invoice(
-                    faces[i],
-                    book,
-                    0,
-                    0,
-                    block.timestamp + (30 + i * 15) * 1 days,
-                    keccak256(abi.encode("SYNTHETIC-SG-2026", i, faces[i]))
-                )
-            );
-            receivableValue += book;
+        registry = attestations;
+    }
+
+    function admit(bytes32 uid, InvoiceInput[] calldata entries) external onlyServicer {
+        require(attestationUID == bytes32(0) && !activated && entries.length > 0 && entries.length <= 32, "already admitted or invalid count");
+        require(registry.isValid(uid), "attestation invalid");
+        AttestationRegistry.Claim memory c = registry.getClaim(uid);
+        bytes32 root = keccak256(abi.encode(entries));
+        require(c.pool == address(this) && c.currency == address(cash) && c.root == root, "claim mismatch");
+        uint256 face;
+        for (uint256 i; i < entries.length; ++i) {
+            InvoiceInput calldata e = entries[i];
+            require(e.id != bytes32(0) && !admittedId[e.id], "duplicate invoice");
+            require(e.face >= e.book && e.book > 0 && e.due > block.timestamp && e.evidence != bytes32(0), "invalid invoice");
+            admittedId[e.id] = true;
+            invoices.push(Invoice(e.face, e.book, 0, 0, e.due, e.evidence));
+            receivableValue += e.book;
+            face += e.face;
         }
+        require(c.face == face && c.book == receivableValue, "value mismatch");
+        attestationUID = uid;
         _mint(address(this), receivableValue);
+        emit PortfolioAdmitted(uid, root, receivableValue);
     }
 
     function decimals() public pure override returns (uint8) {
@@ -110,6 +131,7 @@ contract ReceivablePool is ERC20, ReentrancyGuard {
     }
 
     function activate(IMorpho engine, MarketParams calldata marketParams) external onlyServicer {
+        require(registry.isValid(attestationUID), "attestation invalid");
         require(
             !activated && marketParams.collateralToken == address(this) && marketParams.loanToken == address(cash),
             "invalid setup"
@@ -123,6 +145,7 @@ contract ReceivablePool is ERC20, ReentrancyGuard {
     }
 
     function borrow(uint256 amount) external onlyServicer nonReentrant {
+        require(registry.isValid(attestationUID), "attestation invalid");
         require(activated && !closed && amount > 0, "facility unavailable");
         hasBorrowed = true;
         morpho.borrow(params, amount, 0, address(this), servicer);

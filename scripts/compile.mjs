@@ -13,30 +13,36 @@ const sources = Object.fromEntries(
     ]),
 );
 function compile(compiler, sources, evmVersion) {
+  const resolved = { ...sources };
+  const settings = {
+    optimizer: { enabled: true, runs: 200 },
+    evmVersion,
+    outputSelection: {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode.object",
+          "evm.deployedBytecode.object",
+          "metadata",
+        ],
+      },
+    },
+  };
   const output = JSON.parse(
     compiler.compile(
       JSON.stringify({
         language: "Solidity",
         sources,
-        settings: {
-          optimizer: { enabled: true, runs: 200 },
-          evmVersion,
-          outputSelection: {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode.object",
-                "evm.deployedBytecode.object",
-              ],
-            },
-          },
-        },
+        settings,
       }),
       {
         import: (name) => {
           for (const p of [name, path.join("node_modules", name)])
-            if (fs.existsSync(p))
-              return { contents: fs.readFileSync(p, "utf8") };
+            if (fs.existsSync(p)) {
+              const contents = fs.readFileSync(p, "utf8");
+              resolved[name] = { content: contents };
+              return { contents };
+            }
           return { error: `Cannot resolve ${name}` };
         },
       },
@@ -46,6 +52,12 @@ function compile(compiler, sources, evmVersion) {
     if (error.severity === "error") console.error(error.formattedMessage);
   if (output.errors?.some((e) => e.severity === "error")) process.exit(1);
   fs.mkdirSync("artifacts", { recursive: true });
+  fs.mkdirSync("verification", { recursive: true });
+  const verificationFile = `verification/solc-${compiler.version().split("+")[0]}.json`;
+  fs.writeFileSync(
+    verificationFile,
+    JSON.stringify({ language: "Solidity", sources: resolved, settings }),
+  );
   let count = 0;
   for (const [source, contracts] of Object.entries(output.contracts))
     for (const [name, c] of Object.entries(contracts)) {
@@ -56,6 +68,8 @@ function compile(compiler, sources, evmVersion) {
           source,
           contractName: name,
           compiler: compiler.version(),
+          verificationFile,
+          metadata: c.metadata,
           abi: c.abi,
           bytecode: `0x${c.evm.bytecode.object}`,
           runtimeBytes: c.evm.deployedBytecode.object.length / 2,

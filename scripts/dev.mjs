@@ -26,6 +26,7 @@ async function run(cmd, args) {
 }
 try {
   await run(process.execPath, ["scripts/compile.mjs"]);
+  await run(process.execPath, ["scripts/export-web.mjs"]);
   fs.mkdirSync(".runtime", { recursive: true });
   const log = fs.openSync(".runtime/anvil.log", "w");
   // A fresh disposable chain on every start; reloads in the browser preserve state.

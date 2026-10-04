@@ -594,7 +594,7 @@ export default function App() {
   );
 }
 
-function Overview({
+export function Overview({
   s,
   act,
   busy,
@@ -867,7 +867,9 @@ function Overview({
           </Note>
           <div className="test-fund-line">
             <Wallet size={14} />
-            Uses a pre-funded disposable demo wallet
+            {s.network.chainId === 31337
+              ? "Uses a pre-funded disposable demo wallet"
+              : "Your connected wallet · test dollars only"}
           </div>
         </aside>
       </div>
@@ -895,7 +897,7 @@ function Overview({
   );
 }
 
-function Receivables({ s }: { s: Snapshot }) {
+export function Receivables({ s }: { s: Snapshot }) {
   const [selected, setSelected] = useState<Invoice | null>(null);
   const max = Math.max(...s.invoices.map((i) => i.face));
   return (
@@ -1065,8 +1067,8 @@ function Receivables({ s }: { s: Snapshot }) {
           />
           <code>{selected.evidence}</code>
           <p>
-            Hash of the deterministic fixture identifier, invoice index and face
-            amount. No live TradeTrust, InvoiceNow, registry or bank connection.
+            Hash of the exact UTF-8 synthetic evidence document. No live
+            TradeTrust, InvoiceNow, registry or bank connection.
           </p>
           <CopyButton value={selected.evidence} label="Copy evidence hash" />
         </section>
@@ -1075,7 +1077,7 @@ function Receivables({ s }: { s: Snapshot }) {
   );
 }
 
-function YieldLab({
+export function YieldLab({
   s,
   act,
   busy,
@@ -1307,7 +1309,7 @@ function YieldLab({
   );
 }
 
-function Servicing({
+export function Servicing({
   s,
   act,
   busy,
@@ -1500,28 +1502,30 @@ function Servicing({
           </p>
         </section>
       </div>
-      <section className="card space-top">
-        <CardHead title="Move through time" right={<Clock size={20} />} />
-        <div className="clock-controls">
-          <div>
-            <strong>{date(s.network.timestamp)}</strong>
-            <p>Local chain time. Advancing accrues real protocol interest.</p>
+      {s.network.chainId === 31337 && (
+        <section className="card space-top">
+          <CardHead title="Move through time" right={<Clock size={20} />} />
+          <div className="clock-controls">
+            <div>
+              <strong>{date(s.network.timestamp)}</strong>
+              <p>Local chain time. Advancing accrues real protocol interest.</p>
+            </div>
+            <div>
+              {[7, 30, 100].map((days) => (
+                <button
+                  key={days}
+                  className="secondary"
+                  disabled={busy}
+                  onClick={() => void act("advance", { days })}
+                >
+                  + {days} days
+                  <ArrowRight size={15} />
+                </button>
+              ))}
+            </div>
           </div>
-          <div>
-            {[7, 30, 100].map((days) => (
-              <button
-                key={days}
-                className="secondary"
-                disabled={busy}
-                onClick={() => void act("advance", { days })}
-              >
-                + {days} days
-                <ArrowRight size={15} />
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
       <details className="card advanced space-top">
         <summary>
           Additional facility controls
@@ -1576,7 +1580,7 @@ function Servicing({
   );
 }
 
-function ActivityPage({ s }: { s: Snapshot }) {
+export function ActivityPage({ s }: { s: Snapshot }) {
   const [expanded, setExpanded] = useState<Transaction | null>(null);
   function download() {
     const blob = new Blob([JSON.stringify(s, null, 2)], {
@@ -1595,7 +1599,7 @@ function ActivityPage({ s }: { s: Snapshot }) {
         <div>
           <span className="eyebrow">EVERY ACTION, ACCOUNTED FOR</span>
           <h1>The transaction trail.</h1>
-          <p>Confirmed transactions from this disposable local chain.</p>
+          <p>Confirmed transactions from {s.network.name}.</p>
         </div>
         <button className="secondary" onClick={download}>
           <Download size={16} />
@@ -1668,12 +1672,21 @@ function ActivityPage({ s }: { s: Snapshot }) {
           <code className="long-code">{expanded.hash}</code>
           <p>
             Block {expanded.block} · {expanded.role} · successful receipt on
-            chain 31337
+            chain {s.network.chainId}
           </p>
           <CopyButton value={expanded.hash} label="Copy transaction hash" />
           <p className="fine-print">
-            Local RPC: http://127.0.0.1:8545 · No public block explorer exists
-            for this disposable chain.
+            {s.network.chainId === 31337 ? (
+              "Local RPC: http://127.0.0.1:8545 · No public explorer"
+            ) : (
+              <a
+                href={`https://sepolia.arbiscan.io/tx/${expanded.hash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View confirmed transaction on Arbiscan ↗
+              </a>
+            )}
           </p>
         </section>
       )}
