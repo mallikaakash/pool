@@ -1,6 +1,507 @@
 {
   "schema": 1,
   "chainId": 421614,
-  "status": "not_deployed",
-  "addresses": {}
+  "status": "ready",
+  "roles": {
+    "operator": "0xEb3356a0b57e7dcCb9341fD40545a5dCb6239267",
+    "attestor": "0x45b16B03CA58Ac4E02e1522c8457F2BfEe4F8790",
+    "investor": "0x68C6e946d815E9df17548f822379ADD9D9439530"
+  },
+  "addresses": {
+    "TestDollar": "0x0c62a607fd0146b10f35011e3d0636a6b541186a",
+    "AttestationRegistry": "0x1f741265cf4ee4188eb3e0c4047186af4e8ba4be",
+    "ReceivablePool": "0x6444f31447e252262077f4d2d879784fac264491",
+    "Morpho": "0x47d5b0229e2b636a7d2d0b8d48d6bcfeb9523807",
+    "DemoRateModel": "0xc8689d8813e1277b2ba25d93d3ff370a1dc8a9ec",
+    "ReceivableOracle": "0xf24fc4f6219cc03c9d30695b67b1768d9e2e569d",
+    "LenderVault": "0xedf95d9cfb157f5f38c1125b7dfb3968e05d2c4b",
+    "PoolSY": "0x70ad85300f522a41689954a4153744bf6e57e488",
+    "PendleCode0": "0x7f2971772509a838530e7fc164be83017f9fbb7c",
+    "PendleCode1": "0xb5d532ad89e389b628ee51ac3984e571af123a1b",
+    "FactoryImplementation": "0x342fa917b5dd7ceec95ee5148df3c6a361044a2d",
+    "ERC1967Proxy": "0x298b5f91fd3e6dff06de7dde78e4c3c05535ec82",
+    "PendleYieldContractFactoryUpg": "0x298b5f91fd3e6dff06de7dde78e4c3c05535ec82",
+    "PendlePrincipalToken": "0x621ee3793F7534cfB0746347e45480A18875331E",
+    "PendleYieldToken": "0x685C79a2aeC89E3a8CF82dF9644061Afd4bf6efD",
+    "YieldRouter": "0x4be43ae5f1ea300e20f418ef91e206c5d5e14f37",
+    "QuoteMarket": "0xf45328c51cd43e56f7d537020a09e910dcdab279"
+  },
+  "codeHashes": {
+    "TestDollar": "0xd9f697a432ca2b4fd1819439cfc30477f83c47f97e756544ee6e539f060e9f9b",
+    "AttestationRegistry": "0x026cab79cce38f80491425c0e869877a677a132257215ffb3259ea53dec16f01",
+    "ReceivablePool": "0xa636a2486b6b089e7fce873690935317267263daf180ddbfdee6112b754dee2b",
+    "Morpho": "0xe6df26d002d57c6ce456d1e7ae94e6ad3622432bf923a775909cc4f1e74222a1",
+    "DemoRateModel": "0x9c6c18c6c6536cf15b961b18944dde376bf3f27181b67becd0e56f896c92bdee",
+    "ReceivableOracle": "0x0a314d918de79dfc5596f59aed2968f40ed9e929d1f49723f3ecf61248a61ed8",
+    "LenderVault": "0xcbfbfd8efd5dbeaf566a8dd0acfdab77726af8f84c5a1d051004103ab9c36b28",
+    "PoolSY": "0xf195d4637640531baf8af7fd42149e965d7685eb7e525fbc896e181e735069f8",
+    "PendleCode0": "0x0e915a1b61a8da65f692985921ac5a274c7d4ac32fa9bf4bc813b7e6689e93d6",
+    "PendleCode1": "0x217fb6b9f2817d82440f27a230908b69984bd631d79b7b02dfdcf0e9d5733955",
+    "FactoryImplementation": "0xc487f0e446d45daed3244bebb373bd84e461c4fc7c0dcf5fe67bf4748000c0fa",
+    "ERC1967Proxy": "0x7a5c3c5d7ff49140fdfe276665a476884f9ebf5b757f2c15a343fcbac79a4fd8",
+    "PendleYieldContractFactoryUpg": "0x7a5c3c5d7ff49140fdfe276665a476884f9ebf5b757f2c15a343fcbac79a4fd8",
+    "PendlePrincipalToken": "0x420446545a7735fa0085c217460ac23f67633189ca81fa9958ac4b7b10c57065",
+    "PendleYieldToken": "0xebc01e5f067b8df4f687400cd2183771a9530fd3a4735ab6acc5f0c7a5577a4f",
+    "YieldRouter": "0xd69c801b9dcd89f3d9e710426a5719e88291f2a40cfa77a1f5e38e941ae3ba33",
+    "QuoteMarket": "0x5a22848775a2b5bbe77763eeee016251dfe5d8e0ddd52718a4a0372118298e65"
+  },
+  "steps": {
+    "Deploy TestDollar": {
+      "hash": "0x6e68a35f9b5835b49fc1fb576a0985478b16b0d2161807b34d086a203ec4850f",
+      "address": "0x0c62a607fd0146b10f35011e3d0636a6b541186a",
+      "block": 315576374,
+      "args": [],
+      "artifact": "TestDollar"
+    },
+    "Deploy AttestationRegistry": {
+      "hash": "0x76cb7d158abcdb383ac9b7d41e6aa4c5dc2ac31a354f2e912a92f0f4c96f6aa8",
+      "address": "0x1f741265cf4ee4188eb3e0c4047186af4e8ba4be",
+      "block": 315576421,
+      "args": [
+        "0x45b16B03CA58Ac4E02e1522c8457F2BfEe4F8790"
+      ],
+      "artifact": "AttestationRegistry"
+    },
+    "Deploy ReceivablePool": {
+      "hash": "0x044797eada9e46f17fc874efd1b37af98c7840cef55ad371c6d3fab42de33afa",
+      "address": "0x6444f31447e252262077f4d2d879784fac264491",
+      "block": 315578736,
+      "args": [
+        "0x0c62a607fd0146b10f35011e3d0636a6b541186a",
+        "0xEb3356a0b57e7dcCb9341fD40545a5dCb6239267",
+        "0x1f741265cf4ee4188eb3e0c4047186af4e8ba4be"
+      ],
+      "artifact": "ReceivablePool"
+    },
+    "Deploy Morpho": {
+      "hash": "0x3bc7ae0b37900e19697bebd5d99807de7f47b1220d14f511fd868bbf6c73e5e8",
+      "address": "0x47d5b0229e2b636a7d2d0b8d48d6bcfeb9523807",
+      "block": 315593286,
+      "args": [
+        "0xEb3356a0b57e7dcCb9341fD40545a5dCb6239267"
+      ],
+      "artifact": "Morpho"
+    },
+    "Deploy DemoRateModel": {
+      "hash": "0xb1ff98d9e997e2a315d92794c481fbebb98ea6b64f73b8b9c9e90737069268e2",
+      "address": "0xc8689d8813e1277b2ba25d93d3ff370a1dc8a9ec",
+      "block": 315593369,
+      "args": [],
+      "artifact": "DemoRateModel"
+    },
+    "Deploy ReceivableOracle": {
+      "hash": "0xb47d013e8521314b089d5b590f3d36bb65839c52de509970a3f4b5a7f91fbb4e",
+      "address": "0xf24fc4f6219cc03c9d30695b67b1768d9e2e569d",
+      "block": 315593436,
+      "args": [
+        "0x6444f31447e252262077f4d2d879784fac264491"
+      ],
+      "artifact": "ReceivableOracle"
+    },
+    "Morpho.enableIrm": {
+      "hash": "0xd9269b69c9bbfa970db2296334234d6f63ebe4fda4b6dd4d70be440fa86efb88",
+      "address": null,
+      "block": 315593490
+    },
+    "Morpho.enableLltv": {
+      "hash": "0x00f1ea0597cd4971681b46cd8ce1b9086583e9e906965d486459fc72df07e751",
+      "address": null,
+      "block": 315593554
+    },
+    "Morpho.createMarket": {
+      "hash": "0x6a1bef7673389315106a8f07a7bdd7cda72045467dee988785de095962ce75e5",
+      "address": null,
+      "block": 315593616
+    },
+    "Deploy LenderVault": {
+      "hash": "0x0372470692da238f14441691518355e0a2dc94443d326e64e8df65113d27eb41",
+      "address": "0xedf95d9cfb157f5f38c1125b7dfb3968e05d2c4b",
+      "block": 315593664,
+      "args": [
+        "0x47d5b0229e2b636a7d2d0b8d48d6bcfeb9523807",
+        {
+          "loanToken": "0x0c62a607fd0146b10f35011e3d0636a6b541186a",
+          "collateralToken": "0x6444f31447e252262077f4d2d879784fac264491",
+          "oracle": "0xf24fc4f6219cc03c9d30695b67b1768d9e2e569d",
+          "irm": "0xc8689d8813e1277b2ba25d93d3ff370a1dc8a9ec",
+          "lltv": "625000000000000000"
+        }
+      ],
+      "artifact": "LenderVault"
+    },
+    "Deploy PoolSY": {
+      "hash": "0xd5fb149031d1e78596c241ce4c573b869bf16f637aabf929f3819ab442d91d95",
+      "address": "0x70ad85300f522a41689954a4153744bf6e57e488",
+      "block": 315593713,
+      "args": [
+        "0xedf95d9cfb157f5f38c1125b7dfb3968e05d2c4b"
+      ],
+      "artifact": "PoolSY"
+    },
+    "Store Pendle creation code 0": {
+      "hash": "0x7dea8bb80ba97ec04f9683d7cfaa883a8b067d7cb9f90af9688ede7aba7c8123",
+      "address": "0x7f2971772509a838530e7fc164be83017f9fbb7c",
+      "block": 315593774
+    },
+    "Store Pendle creation code 1": {
+      "hash": "0xd12fa8bd8feee376e27cbf289b95cec79c3dbac2f6d18706995f1cfca940b663",
+      "address": "0xb5d532ad89e389b628ee51ac3984e571af123a1b",
+      "block": 315593840
+    },
+    "Deploy FactoryImplementation": {
+      "hash": "0xd5643dfefa5e0ffe45844a0484e7afe005a38edf5bb9eb0f3ec9111d5522341d",
+      "address": "0x342fa917b5dd7ceec95ee5148df3c6a361044a2d",
+      "block": 315593923,
+      "args": [
+        "0x7f2971772509a838530e7fc164be83017f9fbb7c",
+        "8911",
+        "0xb5d532ad89e389b628ee51ac3984e571af123a1b",
+        "8912"
+      ],
+      "artifact": "PendleYieldContractFactoryUpg"
+    },
+    "Deploy ERC1967Proxy": {
+      "hash": "0xb0b59a023b154128b31dfc9be23f45034a1520ae16a64c9b26019ef7396b7237",
+      "address": "0x298b5f91fd3e6dff06de7dde78e4c3c05535ec82",
+      "block": 315593977,
+      "args": [
+        "0x342fa917b5dd7ceec95ee5148df3c6a361044a2d",
+        "0x5aa175c30000000000000000000000000000000000000000000000000000000000000e1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000eb3356a0b57e7dccb9341fd40545a5dcb6239267000000000000000000000000eb3356a0b57e7dccb9341fd40545a5dcb6239267"
+      ],
+      "artifact": "ERC1967Proxy"
+    },
+    "PendleYieldContractFactoryUpg.createYieldContract": {
+      "hash": "0xc646b887973f15531980f30a9b393d6fb57eb4ef694d501b10eac71532d54bda",
+      "address": null,
+      "block": 315595913
+    },
+    "Deploy YieldRouter": {
+      "hash": "0xd680ab27b22f5fa57b26d4761ab667c6a679e85c4f7cd71f8bac59582b4be0e2",
+      "address": "0x4be43ae5f1ea300e20f418ef91e206c5d5e14f37",
+      "block": 315595960,
+      "args": [
+        "0x70ad85300f522a41689954a4153744bf6e57e488",
+        "0x685C79a2aeC89E3a8CF82dF9644061Afd4bf6efD",
+        "0xedf95d9cfb157f5f38c1125b7dfb3968e05d2c4b"
+      ],
+      "artifact": "YieldRouter"
+    },
+    "Deploy QuoteMarket": {
+      "hash": "0xd55db2e0d332311860275db1f376d9974d7c3c14f962a193c83f42d090d62b4f",
+      "address": "0xf45328c51cd43e56f7d537020a09e910dcdab279",
+      "block": 315596007,
+      "args": [
+        "0x0c62a607fd0146b10f35011e3d0636a6b541186a",
+        "0x621ee3793F7534cfB0746347e45480A18875331E",
+        "0x685C79a2aeC89E3a8CF82dF9644061Afd4bf6efD"
+      ],
+      "artifact": "QuoteMarket"
+    },
+    "AttestationRegistry.publish": {
+      "hash": "0x829d065b31555d85ff28f6328635485d6c6aa3b2cd47834cce5f69b759c3437e",
+      "address": null,
+      "block": 315598178
+    },
+    "ReceivablePool.admit": {
+      "hash": "0xea7b5a58daae77f611882c37868ed7c1f40976252a2d0f42cd203f48a47b9983",
+      "address": null,
+      "block": 315598226
+    },
+    "ReceivablePool.activate": {
+      "hash": "0x89dfce8f7458e0dbac43ce236012e87213577ced64e56b917a4498213329722f",
+      "address": null,
+      "block": 315598272
+    },
+    "TestDollar.mint": {
+      "hash": "0x816493d762be9281f6385c62661652863b532bef46a225020e24f6819678f743",
+      "address": null,
+      "block": 315598322
+    },
+    "Fund investor": {
+      "hash": "0xf06ee3a797b6c37bc2408902d81056af7d5451cecb0438611410c9c28866a52a",
+      "address": null,
+      "block": 315598366
+    },
+    "Approve seed deposit": {
+      "hash": "0x32451340b3f6f1296339cb8fab14d8350bf3ef5769b36dd29745d4d393b3cb85",
+      "address": null,
+      "block": 315598471
+    },
+    "Seed lending liquidity": {
+      "hash": "0x815076f7b50108906d7f5ea154f689356fed11bfcf8bcc564f6f9e04620d95e7",
+      "address": null,
+      "block": 315598527
+    }
+  },
+  "transactions": [
+    {
+      "hash": "0x6e68a35f9b5835b49fc1fb576a0985478b16b0d2161807b34d086a203ec4850f",
+      "label": "Deploy TestDollar",
+      "role": "operator",
+      "block": 315576374,
+      "time": 1791092828,
+      "status": "success"
+    },
+    {
+      "hash": "0x76cb7d158abcdb383ac9b7d41e6aa4c5dc2ac31a354f2e912a92f0f4c96f6aa8",
+      "label": "Deploy AttestationRegistry",
+      "role": "operator",
+      "block": 315576421,
+      "time": 1791092840,
+      "status": "success"
+    },
+    {
+      "hash": "0x044797eada9e46f17fc874efd1b37af98c7840cef55ad371c6d3fab42de33afa",
+      "label": "Deploy ReceivablePool",
+      "role": "operator",
+      "block": 315578736,
+      "time": 1791093418,
+      "status": "success"
+    },
+    {
+      "hash": "0x3bc7ae0b37900e19697bebd5d99807de7f47b1220d14f511fd868bbf6c73e5e8",
+      "label": "Deploy Morpho",
+      "role": "operator",
+      "block": 315593286,
+      "time": 1791097062,
+      "status": "success"
+    },
+    {
+      "hash": "0xb1ff98d9e997e2a315d92794c481fbebb98ea6b64f73b8b9c9e90737069268e2",
+      "label": "Deploy DemoRateModel",
+      "role": "operator",
+      "block": 315593369,
+      "time": 1791097081,
+      "status": "success"
+    },
+    {
+      "hash": "0xb47d013e8521314b089d5b590f3d36bb65839c52de509970a3f4b5a7f91fbb4e",
+      "label": "Deploy ReceivableOracle",
+      "role": "operator",
+      "block": 315593436,
+      "time": 1791097098,
+      "status": "success"
+    },
+    {
+      "hash": "0xd9269b69c9bbfa970db2296334234d6f63ebe4fda4b6dd4d70be440fa86efb88",
+      "label": "Morpho.enableIrm",
+      "role": "operator",
+      "block": 315593490,
+      "time": 1791097111,
+      "status": "success"
+    },
+    {
+      "hash": "0x00f1ea0597cd4971681b46cd8ce1b9086583e9e906965d486459fc72df07e751",
+      "label": "Morpho.enableLltv",
+      "role": "operator",
+      "block": 315593554,
+      "time": 1791097127,
+      "status": "success"
+    },
+    {
+      "hash": "0x6a1bef7673389315106a8f07a7bdd7cda72045467dee988785de095962ce75e5",
+      "label": "Morpho.createMarket",
+      "role": "operator",
+      "block": 315593616,
+      "time": 1791097143,
+      "status": "success"
+    },
+    {
+      "hash": "0x0372470692da238f14441691518355e0a2dc94443d326e64e8df65113d27eb41",
+      "label": "Deploy LenderVault",
+      "role": "operator",
+      "block": 315593664,
+      "time": 1791097155,
+      "status": "success"
+    },
+    {
+      "hash": "0xd5fb149031d1e78596c241ce4c573b869bf16f637aabf929f3819ab442d91d95",
+      "label": "Deploy PoolSY",
+      "role": "operator",
+      "block": 315593713,
+      "time": 1791097167,
+      "status": "success"
+    },
+    {
+      "hash": "0x7dea8bb80ba97ec04f9683d7cfaa883a8b067d7cb9f90af9688ede7aba7c8123",
+      "label": "Store Pendle creation code 0",
+      "role": "operator",
+      "block": 315593774,
+      "time": 1791097183,
+      "status": "success"
+    },
+    {
+      "hash": "0xd12fa8bd8feee376e27cbf289b95cec79c3dbac2f6d18706995f1cfca940b663",
+      "label": "Store Pendle creation code 1",
+      "role": "operator",
+      "block": 315593840,
+      "time": 1791097199,
+      "status": "success"
+    },
+    {
+      "hash": "0xd5643dfefa5e0ffe45844a0484e7afe005a38edf5bb9eb0f3ec9111d5522341d",
+      "label": "Deploy FactoryImplementation",
+      "role": "operator",
+      "block": 315593923,
+      "time": 1791097220,
+      "status": "success"
+    },
+    {
+      "hash": "0xb0b59a023b154128b31dfc9be23f45034a1520ae16a64c9b26019ef7396b7237",
+      "label": "Deploy ERC1967Proxy",
+      "role": "operator",
+      "block": 315593977,
+      "time": 1791097234,
+      "status": "success"
+    },
+    {
+      "hash": "0xc646b887973f15531980f30a9b393d6fb57eb4ef694d501b10eac71532d54bda",
+      "label": "PendleYieldContractFactoryUpg.createYieldContract",
+      "role": "operator",
+      "block": 315595913,
+      "time": 1791097717,
+      "status": "success"
+    },
+    {
+      "hash": "0xd680ab27b22f5fa57b26d4761ab667c6a679e85c4f7cd71f8bac59582b4be0e2",
+      "label": "Deploy YieldRouter",
+      "role": "operator",
+      "block": 315595960,
+      "time": 1791097729,
+      "status": "success"
+    },
+    {
+      "hash": "0xd55db2e0d332311860275db1f376d9974d7c3c14f962a193c83f42d090d62b4f",
+      "label": "Deploy QuoteMarket",
+      "role": "operator",
+      "block": 315596007,
+      "time": 1791097741,
+      "status": "success"
+    },
+    {
+      "hash": "0x829d065b31555d85ff28f6328635485d6c6aa3b2cd47834cce5f69b759c3437e",
+      "label": "AttestationRegistry.publish",
+      "role": "operator",
+      "block": 315598178,
+      "time": 1791098279,
+      "status": "success"
+    },
+    {
+      "hash": "0xea7b5a58daae77f611882c37868ed7c1f40976252a2d0f42cd203f48a47b9983",
+      "label": "ReceivablePool.admit",
+      "role": "operator",
+      "block": 315598226,
+      "time": 1791098292,
+      "status": "success"
+    },
+    {
+      "hash": "0x89dfce8f7458e0dbac43ce236012e87213577ced64e56b917a4498213329722f",
+      "label": "ReceivablePool.activate",
+      "role": "operator",
+      "block": 315598272,
+      "time": 1791098303,
+      "status": "success"
+    },
+    {
+      "hash": "0x816493d762be9281f6385c62661652863b532bef46a225020e24f6819678f743",
+      "label": "TestDollar.mint",
+      "role": "operator",
+      "block": 315598322,
+      "time": 1791098316,
+      "status": "success"
+    },
+    {
+      "hash": "0xf06ee3a797b6c37bc2408902d81056af7d5451cecb0438611410c9c28866a52a",
+      "label": "Fund investor",
+      "role": "operator",
+      "block": 315598366,
+      "time": 1791098327,
+      "status": "success"
+    },
+    {
+      "hash": "0x32451340b3f6f1296339cb8fab14d8350bf3ef5769b36dd29745d4d393b3cb85",
+      "label": "Approve seed deposit",
+      "role": "operator",
+      "block": 315598471,
+      "time": 1791098353,
+      "status": "success"
+    },
+    {
+      "hash": "0x815076f7b50108906d7f5ea154f689356fed11bfcf8bcc564f6f9e04620d95e7",
+      "label": "Seed lending liquidity",
+      "role": "operator",
+      "block": 315598527,
+      "time": 1791098368,
+      "status": "success"
+    }
+  ],
+  "pending": null,
+  "deploymentBlock": 315576374,
+  "evidence": {
+    "entries": [
+      {
+        "id": "0x4b2ccd1f4416af3f6565c74d2b44513aa6e516d52301371b7df8d655ae27ab91",
+        "face": "120000000000",
+        "book": "116400000000",
+        "due": "1793685419",
+        "evidence": "0xae9671691d32dc15d6a390711cbf14a0bd99e07b6586904994a33c41b2658346"
+      },
+      {
+        "id": "0xdeb05b9c8f25cfbd412d1b3d1e97b022170723e2a5eb4c687e106334ecb08dda",
+        "face": "100000000000",
+        "book": "97000000000",
+        "due": "1794981419",
+        "evidence": "0x8a009e44bbb31bbb01a14d758b85b5c1df4e9426346fbc7c9b2c51b099d70963"
+      },
+      {
+        "id": "0x696c753835a2e3565c24db13dd82571c8c1a0b765f88846d42ec88dd9549afb4",
+        "face": "90000000000",
+        "book": "87300000000",
+        "due": "1796277419",
+        "evidence": "0x34e887b276b303ef5c6fcecdf94decbf9c4907ad10b8c550f714651b28e1ff42"
+      },
+      {
+        "id": "0x973228606ee075a0c6073adb9d2c973350df594011f7039597425c97cf405938",
+        "face": "110000000000",
+        "book": "106700000000",
+        "due": "1797573419",
+        "evidence": "0x4d04d297267531bbcc0aef483966073ceea9a6995b3bbecacab2a0e801ce8b83"
+      },
+      {
+        "id": "0x8e0c4d5d90c959bb4329fec8092cdd6c8350a824c8fed321679d3babd62e5e07",
+        "face": "80000000000",
+        "book": "77600000000",
+        "due": "1798869419",
+        "evidence": "0x640cbc0d10cddaaab9290cf30924d79e8e6a8ad3fce8c69b6649361782f5448d"
+      }
+    ],
+    "documents": [
+      "{\n  \"schema\": \"pool.synthetic-invoice.v1\",\n  \"id\": \"SYNTHETIC-SG-1\",\n  \"synthetic\": true,\n  \"currency\": \"tUSD\",\n  \"face\": \"120000000000\",\n  \"book\": \"116400000000\",\n  \"due\": 1793685419,\n  \"notice\": \"Fictional demonstration receivable. No external verification or legal assignment.\"\n}",
+      "{\n  \"schema\": \"pool.synthetic-invoice.v1\",\n  \"id\": \"SYNTHETIC-SG-2\",\n  \"synthetic\": true,\n  \"currency\": \"tUSD\",\n  \"face\": \"100000000000\",\n  \"book\": \"97000000000\",\n  \"due\": 1794981419,\n  \"notice\": \"Fictional demonstration receivable. No external verification or legal assignment.\"\n}",
+      "{\n  \"schema\": \"pool.synthetic-invoice.v1\",\n  \"id\": \"SYNTHETIC-SG-3\",\n  \"synthetic\": true,\n  \"currency\": \"tUSD\",\n  \"face\": \"90000000000\",\n  \"book\": \"87300000000\",\n  \"due\": 1796277419,\n  \"notice\": \"Fictional demonstration receivable. No external verification or legal assignment.\"\n}",
+      "{\n  \"schema\": \"pool.synthetic-invoice.v1\",\n  \"id\": \"SYNTHETIC-SG-4\",\n  \"synthetic\": true,\n  \"currency\": \"tUSD\",\n  \"face\": \"110000000000\",\n  \"book\": \"106700000000\",\n  \"due\": 1797573419,\n  \"notice\": \"Fictional demonstration receivable. No external verification or legal assignment.\"\n}",
+      "{\n  \"schema\": \"pool.synthetic-invoice.v1\",\n  \"id\": \"SYNTHETIC-SG-5\",\n  \"synthetic\": true,\n  \"currency\": \"tUSD\",\n  \"face\": \"80000000000\",\n  \"book\": \"77600000000\",\n  \"due\": 1798869419,\n  \"notice\": \"Fictional demonstration receivable. No external verification or legal assignment.\"\n}"
+    ]
+  },
+  "claim": {
+    "pool": "0x6444f31447e252262077f4d2d879784fac264491",
+    "root": "0xb28f3ac1b4a7dbb769c707ccb3d4a84682f80c120def56745489f1298951bb02",
+    "currency": "0x0c62a607fd0146b10f35011e3d0636a6b541186a",
+    "face": "500000000000",
+    "book": "485000000000",
+    "asOf": "1791093419",
+    "validUntil": "1793685419",
+    "nonce": "1791093419"
+  },
+  "uid": "0x89aeb7f13c0f5b898623a55775aba485fa15a8bf23c0888f52f4a06ef26281cc",
+  "params": {
+    "loanToken": "0x0c62a607fd0146b10f35011e3d0636a6b541186a",
+    "collateralToken": "0x6444f31447e252262077f4d2d879784fac264491",
+    "oracle": "0xf24fc4f6219cc03c9d30695b67b1768d9e2e569d",
+    "irm": "0xc8689d8813e1277b2ba25d93d3ff370a1dc8a9ec",
+    "lltv": "625000000000000000"
+  },
+  "marketId": "0x3ff40ac49c905df69fe91a0bb586484360d7ad7a0746d41f693831e523fd6ec6",
+  "expiry": 1791705600,
+  "signature": "0xfc2da8bfd55f91c87a4782b34ea58f4c7308ec2f6f16c8dd23029518367bb02639c3a6e68acd1fc93aad8fc836968a839bd2d7aa9874deded81e9dc080374b021b"
 }

@@ -1,6 +1,6 @@
 # Public testnet release runbook
 
-The software is implemented and rehearsed against disposable test chains. Public-chain deployment requires wallet confirmations; a hosted frontend alone does not mean the contracts are live.
+The initial deployment, signed attestation, portfolio admission and 375,000 tUSD seed deposit are complete on Arbitrum Sepolia. The steps below document setup recovery and the remaining public lifecycle rehearsal. Use the existing public/deployment.json; a new deployment is unnecessary.
 
 ## Wallets
 

@@ -1,6 +1,6 @@
 # Pool: public hackathon release
 
-Status: software implemented and locally rehearsed, 2026-10-04. Public transactions and final source verification await wallet signing. See TESTNET_RUNBOOK.md for execution. This extends the completed local sprint to a public Arbitrum Sepolia demo. It supersedes the local-only deployment scope in SPRINT_SPEC.md; the financial model remains a receivables-backed lending facility.
+Status: contracts deployed, attestation published, portfolio admitted and pool activated on Arbitrum Sepolia, 2026-10-04. Initial lending liquidity is 375,000 tUSD. Public lifecycle wallet actions and the submission video remain outstanding. See release-status.json and source-verification.json for publication and verification results. See TESTNET_RUNBOOK.md for execution. This extends the completed local sprint to a public Arbitrum Sepolia demo. It supersedes the local-only deployment scope in SPRINT_SPEC.md; the financial model remains a receivables-backed lending facility.
 
 ## Deliverable
 
@@ -99,4 +99,4 @@ Record approximately 3–5 minutes: financing problem and investor claim; attest
 - Approve investor and operator demo actions in their respective wallets. Public addresses alone do not grant signing access.
 - Vercel authentication is already confirmed. No wallet secret, purchased token, custom domain or paid subscription is required to begin.
 
-Implementation order is 1 → 2 → 3 → 4 → 5, with deployment performed only after affected contracts pass their tests. The contract, wallet, deployment and trading features are implemented; this checklist does not assert a public deployment has occurred.
+Implementation order is 1 → 2 → 3 → 4 → 5, with deployment performed only after affected contracts pass their tests. The contract, wallet, deployment and trading features are implemented, and the initial public deployment is complete. The acceptance criteria above also include the remaining public lifecycle rehearsal and recording.

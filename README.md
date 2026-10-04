@@ -1,12 +1,19 @@
 # Pool
 
-**Trade credit, composed.** A working local prototype of receivables-backed borrowing, Morpho lending, and Pendle principal/yield separation.
+**Trade credit, composed.** An Arbitrum Sepolia showcase of attested receivables-backed borrowing, Morpho lending, and Pendle principal/yield separation.
 
 ![Pool overview](docs/screenshots/overview.png)
 
 ## Public testnet release
 
-The Arbitrum Sepolia frontend, wallet deployment workflow, signed portfolio admission, revocation and fixed-size PT/YT bid market are implemented. Public contract addresses remain **not deployed** until the owner completes the MetaMask workflow; do not interpret the hosted setup page as an activated pool.
+**Live application:** https://pool-omega-five.vercel.app — view the pool without a wallet.
+
+The contracts are deployed on Arbitrum Sepolia (421614). The attestor's signed portfolio has been published and admitted, the pool is activated, and 375,000 tUSD of initial lending liquidity was supplied. The investor received 75,000 tUSD; its deposit and the operator's borrowing remain separate wallet actions for the public rehearsal.
+
+- [Public deployment manifest](public/deployment.json): addresses, code hashes, signed evidence and 25 confirmed setup transactions.
+- [Attestation publication](https://sepolia.arbiscan.io/tx/0x829d065b31555d85ff28f6328635485d6c6aa3b2cd47834cce5f69b759c3437e).
+- [Source verification results](docs/source-verification.json): Sourcify verification, separate from Arbiscan badges.
+- [Release status](docs/release-status.json): completed checks and remaining submission work.
 
 Use [TESTNET_RUNBOOK.md](docs/TESTNET_RUNBOOK.md) for wallet deployment, signing, source verification, publishing the shared manifest and recording the video. [TESTNET_RELEASE.md](docs/TESTNET_RELEASE.md) records the release scope. The original local demo instructions below remain available for accelerated scenarios.
 
@@ -17,7 +24,7 @@ npm run dev:testnet   # wallet-connected frontend on port 5174
 
 The public application holds no signing keys or privileged transaction API. Attestations bind the pool, evidence commitment, currency, values, validity and nonce. The pool rejects unapproved or duplicate admission; expired/revoked eligibility stops borrowing while preserving repayment. Signed bids settle actual test-dollar payments atomically. All external receivables remain synthetic.
 
-## Run it
+## Run the local demo
 
 Requires Node.js 22.12+ and Foundry's `anvil` on your PATH. No wallet, private key, external RPC, database or paid API is required.
 
@@ -43,9 +50,9 @@ Browser reloads preserve onchain positions. **Restarting the stack creates a fre
 
 This implementation uses a **funding facility**: the originator already owns the receivables and pledges them to borrow working capital. Investors own lender vault shares, whose yield comes from **Morpho borrower interest**. The receivables collateral (`rINV`) and lender shares (`pCREDIT`) are separate claims. This is not a direct invoice-purchase vault, and Pendle does not split invoice discount income directly.
 
-The working sprint scope is recorded in [SPRINT_SPEC.md](docs/SPRINT_SPEC.md). It is an implementation baseline pending the owner's final supplied specification.
+The working sprint scope is recorded in [SPRINT_SPEC.md](docs/SPRINT_SPEC.md). The public extension is recorded in [TESTNET_RELEASE.md](docs/TESTNET_RELEASE.md).
 
-## Five-minute demo
+## Five-minute local demo
 
 1. **Overview:** inspect $485,000 of initial book NAV, $400,000 supplied, and $250,000 borrowed. The investor starts with $25,000 of lender shares and $50,000 of test cash. Deposit $1,000.
 2. **Yield lab:** split 5,000 shares into PT and YT. The original shares move into SY backing; they are not duplicated.
@@ -101,7 +108,7 @@ Both token families use six decimals. The collateral oracle returns `NAV × 10^3
 
 ## Explicit limits
 
-**This is a local prototype, not an Arbitrum or Robinhood deployment.** It does not connect to a production Morpho deployment, the Pendle frontend or a secondary AMM. There are no executable secondary-market prices. The local market demonstrates mechanics, not external integration approval or liquidity.
+**This is an Arbitrum Sepolia testnet showcase with an optional disposable local demo.** Morpho and Pendle instances are deployed and operated by Pool from pinned upstream sources, not official protocol deployments or listings. The public app includes signed, fixed-size PT/YT bids that settle only when funded; it has no secondary AMM or guaranteed liquidity. No real-money assets are accepted.
 
 Every buyer, invoice, assignment, valuation and payment input is synthetic. Evidence hashes commit to exact synthetic documents; designated-attestor signatures identify claims without independently proving those documents true. InvoiceNow, TradeTrust, TFR, banks, SPVs and registries are not connected. The interface's Singapore framing does not imply affiliations or access to those systems.
 

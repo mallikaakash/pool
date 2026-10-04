@@ -810,12 +810,22 @@ function Evidence({
               <div key={name}>
                 <span>{name}</span>
                 <a
-                  href={`https://sepolia.arbiscan.io/address/${address}#code`}
+                  href={`https://sepolia.arbiscan.io/address/${address}`}
                   target="_blank"
                   rel="noreferrer"
                 >
                   {short(address)} ↗
                 </a>
+                {!name.startsWith("PendleCode") && (
+                  <a
+                    href={`https://repo.sourcify.dev/421614/${address}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`View ${name} source on Sourcify`}
+                  >
+                    Source ↗
+                  </a>
+                )}
               </div>
             ))}
           </div>

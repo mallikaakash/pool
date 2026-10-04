@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-10-04T07:34:31.473Z",
+  "url": "https://pool-omega-five.vercel.app",
+  "chainId": 421614,
+  "scope": "Read-only public deployment: actual RPC, no mock wallet, no intercepted requests, no transactions sent",
+  "checks": [
+    "Fresh visitor loads hosted manifest and live RPC state without a wallet or local storage",
+    "Public attestation active; downloaded evidence bytes match all five committed hashes; source links present",
+    "Receivables renders without errors",
+    "Yield lab renders without errors",
+    "Trade renders without errors",
+    "Servicing renders without errors",
+    "Activity renders without errors",
+    "Setup renders without errors",
+    "Mobile evidence deep link renders without horizontal overflow"
+  ],
+  "errors": [],
+  "passed": true
+}

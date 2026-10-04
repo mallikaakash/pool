@@ -1,23 +1,39 @@
 {
-  "date": "2026-10-04T05:15:47.372Z",
+  "date": "2026-10-04T07:34:53.350Z",
   "frontend": "https://pool-omega-five.vercel.app",
-  "deploymentId": "dpl_8U7GNAHnUmLkWtUDYbhFqKuBVBdA",
+  "deploymentId": "dpl_4qkqCxCjTbcwCeqoqo6AQiFg9CkS",
   "frontendStatus": "READY",
   "chainId": 421614,
-  "contractsStatus": "awaiting_owner_wallet_signatures",
-  "protocolTests": 18,
-  "browserRehearsal": "passed on disposable chain via injected test wallet",
-  "verificationInputs": "47 artifacts reproduced exactly; public source verification pending deployment",
-  "walletBalancesETH": {
-    "operator": "0.148998833039156",
-    "attestor": "0.001",
-    "investor": "0"
+  "contractsStatus": "activated_and_seeded",
+  "manifest": "public/deployment.json",
+  "attestationUID": "0x89aeb7f13c0f5b898623a55775aba485fa15a8bf23c0888f52f4a06ef26281cc",
+  "seedLiquidityTUSD": 375000,
+  "initialInvestorTUSD": 75000,
+  "sourceVerification": {
+    "service": "Sourcify",
+    "exactMatches": 14,
+    "solidityContracts": 14,
+    "report": "docs/source-verification.json",
+    "note": "Two Pendle creation-code storage blobs are not Solidity contracts; their runtime code hashes are validated by the manifest."
   },
+  "verification": {
+    "protocol": "18 tests passed before fee fix; 2 fee tests and affected deployment lifecycle test passed after fix",
+    "build": "TypeScript and Vite release build passed",
+    "walletBrowserRehearsal": "Passed on disposable chain via injected test wallet",
+    "liveSnapshot": "docs/public-chain-snapshot.json",
+    "publicBrowser": "Passed against live Arbitrum Sepolia: docs/public-browser-verification.json"
+  },
+  "walletBalancesETH": {
+    "operator": "0.127437402159036",
+    "attestor": "0.001",
+    "investor": "0.02"
+  },
+  "walletBalanceCheckedAt": "2026-10-04T07:29:37.335Z",
   "remaining": [
-    "operator MetaMask deployment confirmations",
-    "attestor typed-data signature and operator publication",
-    "publish final manifest",
-    "public source verification",
-    "actual public-chain rehearsal and final recording"
+    "Investor deposit and operator borrowing on public chain",
+    "Public PT/YT split and funded secondary trade",
+    "Public collection and debt repayment",
+    "Optional short-maturity series setup and real-time redemption",
+    "Submission video recording"
   ]
 }

@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-10-04T07:29:37.335Z",
+  "chainId": 421614,
+  "balances": [
+    {
+      "role": "operator",
+      "address": "0xEb3356a0b57e7dcCb9341fD40545a5dCb6239267",
+      "eth": "0.127437402159036",
+      "testDollars": "525000000000"
+    },
+    {
+      "role": "attestor",
+      "address": "0x45b16B03CA58Ac4E02e1522c8457F2BfEe4F8790",
+      "eth": "0.001",
+      "testDollars": "0"
+    },
+    {
+      "role": "investor",
+      "address": "0x68C6e946d815E9df17548f822379ADD9D9439530",
+      "eth": "0.02",
+      "testDollars": "75000000000"
+    }
+  ]
+}
